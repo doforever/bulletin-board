@@ -6,15 +6,14 @@ import clsx from 'clsx';
 // import { connect } from 'react-redux';
 // import { reduxSelector, reduxActionCreator } from '../../../redux/exampleRedux.js';
 
-import { Header } from '../Header/Header';
+import Button from '@material-ui/core/Button';
 
-import styles from './MainLayout.module.scss';
+import styles from './AnonimNav.module.scss';
 
 const Component = ({className, children}) => (
-  <div className={clsx(className, styles.root)}>
-    <Header />
-    {children}
-  </div>
+  <nav className={clsx(className, styles.root)}>
+    <Button color="inherit" href="https://google.com">Login</Button>
+  </nav>
 );
 
 Component.propTypes = {
@@ -33,7 +32,7 @@ Component.propTypes = {
 // const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 export {
-  Component as MainLayout,
-  // Container as MainLayout,
-  Component as MainLayoutComponent,
+  Component as AnonimNav,
+  // Container as AnonimNav,
+  Component as AnonimNavComponent,
 };

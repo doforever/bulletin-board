@@ -6,15 +6,16 @@ import clsx from 'clsx';
 // import { connect } from 'react-redux';
 // import { reduxSelector, reduxActionCreator } from '../../../redux/exampleRedux.js';
 
-import { Header } from '../Header/Header';
+import Button from '@material-ui/core/Button';
+import { NavLink } from 'react-router-dom';
 
-import styles from './MainLayout.module.scss';
+import styles from './UserNav.module.scss';
 
 const Component = ({className, children}) => (
-  <div className={clsx(className, styles.root)}>
-    <Header />
-    {children}
-  </div>
+  <nav className={clsx(className, styles.root)}>
+    <Button component={NavLink} exact to={`/`} activeClassName={styles.active}>My Posts</Button>
+    <Button component={NavLink} to={`/logout`} activeClassName={styles.active}>Logout</Button>
+  </nav>
 );
 
 Component.propTypes = {
@@ -33,7 +34,7 @@ Component.propTypes = {
 // const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 export {
-  Component as MainLayout,
-  // Container as MainLayout,
-  Component as MainLayoutComponent,
+  Component as UserNav,
+  // Container as UserNav,
+  Component as UserNavComponent,
 };

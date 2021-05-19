@@ -1,4 +1,12 @@
 @import '../../../styles/settings.scss';
 
-// .root {
-// }
+.root {
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .title {
+    text-transform: uppercase;
+  }
+}
