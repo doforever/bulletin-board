@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 
-// import { connect } from 'react-redux';
-// import { reduxSelector, reduxActionCreator } from '../../../redux/exampleRedux.js';
+import { connect } from 'react-redux';
+import { getUser } from '../../../redux/userRedux.js';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -14,9 +14,8 @@ import { AnonimNav } from '../../features/AnonimNav/AnonimNav';
 
 import styles from './Header.module.scss';
 
-const Component = ({className, children}) => {
-  const isLogged = true;
-  const Nav = isLogged ? UserNav : AnonimNav;
+const Component = ({className, user}) => {
+  const Nav = user ? UserNav : AnonimNav;
 
   return (
     <div className={clsx(className, styles.root)}>
@@ -34,22 +33,18 @@ const Component = ({className, children}) => {
 };
 
 Component.propTypes = {
-  children: PropTypes.node,
   className: PropTypes.string,
+  user: PropTypes.string,
 };
 
-// const mapStateToProps = state => ({
-//   someProp: reduxSelector(state),
-// });
+const mapStateToProps = state => ({
+  user: getUser(state),
+});
 
-// const mapDispatchToProps = dispatch => ({
-//   someAction: arg => dispatch(reduxActionCreator(arg)),
-// });
-
-// const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
+const Container = connect(mapStateToProps)(Component);
 
 export {
-  Component as Header,
-  // Container as Header,
+  // Component as Header,
+  Container as Header,
   Component as HeaderComponent,
 };

@@ -3,36 +3,39 @@ import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 
-// import { connect } from 'react-redux';
-// import { reduxSelector, reduxActionCreator } from '../../../redux/exampleRedux.js';
+import { connect } from 'react-redux';
+import { login } from '../../../redux/userRedux.js';
 
-import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
 import styles from './AnonimNav.module.scss';
 
-const Component = ({className, children}) => (
-  <nav className={clsx(className, styles.root)}>
-    <Button color="inherit" href="https://google.com">Login</Button>
-  </nav>
+const Component = ({ className, login }) => (
+  <List component="nav" className={clsx(className, styles.root)}>
+    <ListItem button component='a' onClick={() => login('Me')}>
+      <ListItemText primary="Login"/>
+    </ListItem>
+  </List>
 );
 
 Component.propTypes = {
-  children: PropTypes.node,
+  login: PropTypes.func,
   className: PropTypes.string,
 };
 
-// const mapStateToProps = state => ({
-//   someProp: reduxSelector(state),
-// });
+const mapStateToProps = state => ({
+});
 
-// const mapDispatchToProps = dispatch => ({
-//   someAction: arg => dispatch(reduxActionCreator(arg)),
-// });
+const mapDispatchToProps = dispatch => ({
+  login: arg => dispatch(login(arg)),
+});
 
-// const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
+const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 export {
-  Component as AnonimNav,
-  // Container as AnonimNav,
+  // Component as AnonimNav,
+  Container as AnonimNav,
   Component as AnonimNavComponent,
 };
