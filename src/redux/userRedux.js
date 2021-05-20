@@ -22,7 +22,7 @@ export const reducer = (statePart = [], action = {}) => {
       return action.payload;
     }
     case LOGOUT: {
-      return '';
+      return null;
     }
     default:
       return statePart;
