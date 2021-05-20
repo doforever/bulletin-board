@@ -8,7 +8,6 @@ import { getUser, login, logout } from '../../../redux/userRedux.js';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import { UserNav } from '../../features/UserNav/UserNav';
 import { AnonimNav } from '../../features/AnonimNav/AnonimNav';
 import Link from '@material-ui/core/Link';

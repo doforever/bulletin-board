@@ -3,35 +3,95 @@ import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 
-// import { connect } from 'react-redux';
-// import { reduxSelector, reduxActionCreator } from '../../../redux/exampleRedux.js';
+import { connect } from 'react-redux';
+import { getOneForId } from '../../../redux/postsRedux.js';
+
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import { NotFound } from '../NotFound/NotFound';
+import Link from '@material-ui/core/Link';
 
 import styles from './Post.module.scss';
 
-const Component = ({className, children}) => (
-  <div className={clsx(className, styles.root)}>
-    <h2>Post</h2>
-    {children}
-  </div>
-);
+const Component = ({className, children, post}) => {
+  if (!post) return <NotFound/>;
+  else {
+    const image = post.photo
+      ? (<Grid item xs={12} md={6}>
+        <img src={post.photo} alt={post.title} className={clsx(styles.photo, 'MuiPaper-elevation1')}></img>
+      </Grid>)
+      : '';
+
+    const localization = post.address
+      ? (<Grid item xs>
+        <Typography variant='h6' component='h2'>Localization</Typography>
+        <Typography>{post.address}</Typography>
+      </Grid>)
+      : '';
+
+    return (
+      <Grid container spacing={2} className={clsx(className, styles.root)}>
+        <Grid item xs={12}>
+          <Paper className={styles.paper}>
+            <Grid container alignItems='center'>
+              <Grid item xs>
+                <Typography variant='title' component='h1' align='center'>
+                  {post.title}
+                </Typography>
+              </Grid>
+              {post.price && <Grid item><Typography variant='subtitle1'>{post.price}</Typography></Grid>}
+            </Grid>
+          </Paper>
+        </Grid>
+        {image}
+        <Grid item xs>
+          <Paper className={styles.paper}>
+            <Grid container spacing={2} direction='column'>
+              <Grid item xs>
+                <Typography>
+                  {post.text}
+                </Typography>
+              </Grid>
+              {localization}
+              <Grid item xs>
+                <Typography variant='h6' component='h2'> Contact author</Typography>
+                <Typography component='address'>
+                  <Link href={`mailto:${post.email}`}>{post.email}</Link><br/>
+                  {post.tel && `tel: ${post.tel}`}<br/>
+                </Typography>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+        <Grid item xs={12}>
+        Published: {post.published} <br/>
+        Last update: {post.lastUpdate}
+        </Grid>
+        {children}
+      </Grid>
+    );
+  }
+};
 
 Component.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
+  post: PropTypes.object,
 };
 
-// const mapStateToProps = state => ({
-//   someProp: reduxSelector(state),
-// });
+const mapStateToProps = (state, props) => ({
+  post: getOneForId(state, props.match.params.id),
+});
 
 // const mapDispatchToProps = dispatch => ({
 //   someAction: arg => dispatch(reduxActionCreator(arg)),
 // });
 
-// const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
+const Container = connect(mapStateToProps)(Component);
 
 export {
-  Component as Post,
-  // Container as Post,
+  // Component as Post,
+  Container as Post,
   Component as PostComponent,
 };
