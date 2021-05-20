@@ -11,6 +11,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { UserNav } from '../../features/UserNav/UserNav';
 import { AnonimNav } from '../../features/AnonimNav/AnonimNav';
+import Link from '@material-ui/core/Link';
+import { Link as RouterLink } from 'react-router-dom';
 
 import styles from './Header.module.scss';
 
@@ -27,9 +29,16 @@ const Component = ({className, user, login, logout}) => {
     <div className={clsx(className, styles.root)}>
       <AppBar position="fixed">
         <Toolbar className={styles.toolbar}>
-          <Typography variant="h6" component="h1" className={styles.title}>
-          Bulletin Board
-          </Typography>
+          <Link
+            component={RouterLink}
+            to='/'
+            variant="h6"
+            className={styles.title}
+            color='inherit'
+            underline='none'
+          >
+            Bulletin Board
+          </Link>
           <Nav className={styles.nav}/>
           <select
             value={user ? user.type : ''}
