@@ -12,6 +12,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Alert from '@material-ui/lab/Alert';
+import {Link as RouterLink} from 'react-router-dom';
 
 import styles from './PostsList.module.scss';
 
@@ -30,7 +31,7 @@ const Component = ({className, children, posts}) =>
               </Typography>
             </CardContent>
             <CardActions>
-              <Button href={`/post/${id}`} size="small">Learn More</Button>
+              <Button component={RouterLink} to={`/post/${id}`} size="small">Learn More</Button>
             </CardActions>
           </Card>
         </Grid>
