@@ -8,18 +8,18 @@ import { getAll } from '../../../redux/postsRedux.js';
 import { getUser } from '../../../redux/userRedux.js';
 
 import { PostsList } from '../../features/PostsList/PostsList';
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import { Link as RouterLink } from 'react-router-dom';
+import AddIcon from '@material-ui/icons/Add';
+import { ActionButton } from '../../common/ActionButton/ActionButton';
 
 import styles from './Homepage.module.scss';
 
 const Component = ({className, children, posts, user}) => {
   const userActions = user
     ? (
-      <Grid item>
-        <Button component={RouterLink} variant="contained" color='secondary' to='/post/add'>Add post</Button>
-      </Grid>
+      <ActionButton to='/post/add' label='add'>
+        <AddIcon />
+      </ActionButton>
     )
     : null;
 

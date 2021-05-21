@@ -20,7 +20,10 @@ const Component = ({className, user, login, logout}) => {
 
   const selectUser = ({target}) => {
     if (target.value) {
-      login({type: target.value});
+      login({
+        email: 'joanna.doe@gmail.com',
+        type: target.value,
+      });
     } else logout();
   };
 
