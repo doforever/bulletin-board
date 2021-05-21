@@ -1,4 +1,13 @@
 @import '../../../styles/settings.scss';
 
-// .root {
-// }
+.root {
+  margin: $base-size 0;
+
+  .paper {
+    padding: $base-size;
+  }
+
+  .form {
+    max-width: 600px;
+  }
+}
