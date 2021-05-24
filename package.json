@@ -6,6 +6,7 @@
     "start": "run-p start:* ",
     "start-silent": "run-p start > /dev/null",
     "start:react": "react-scripts start",
+    "start:server": "json-server --watch server/db.json --port 8000",
     "start-and-test": "run-p start-silent test ",
     "build": "react-scripts build",
     "test": "react-scripts test --noStackTrace",
@@ -58,6 +59,7 @@
   },
   "devDependencies": {
     "husky": "^3.1.0",
+    "json-server": "^0.16.3",
     "lint-staged": "^9.4.3",
     "redux-devtools-extension": "^2.13.8"
   }
