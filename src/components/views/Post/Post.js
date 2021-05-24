@@ -42,7 +42,7 @@ const Component = ({className, children, post, user}) => {
             <Paper className={styles.paper}>
               <Grid container alignItems='center'>
                 <Grid item xs>
-                  <Typography variant='title' component='h1' align='center'>
+                  <Typography variant='h4' component='h1' align='center'>
                     {post.title}
                   </Typography>
                 </Grid>
