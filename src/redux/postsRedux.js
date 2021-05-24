@@ -1,6 +1,7 @@
 /* selectors */
 export const getAll = ({posts}) => posts.data;
 export const getOneForId = ({posts}, id) => posts.data.find(post => post.id === id);
+export const getForEmail = ({posts, user}) => posts.data.filter(post => user&& user.type === 'regUser' && post.email === user.email);
 
 /* action name creator */
 const reducerName = 'posts';
