@@ -11,7 +11,7 @@ import { PostEditor } from '../../features/PostEditor/PostEditor';
 
 // import styles from './PostAdd.module.scss';
 
-const Component = ({className, children, user}) => {
+const Component = ({user}) => {
   const [newPost, changeNewPost] = useState({
     title: '',
     text: '',
@@ -45,8 +45,6 @@ const Component = ({className, children, user}) => {
 };
 
 Component.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
   user: PropTypes.object,
 };
 

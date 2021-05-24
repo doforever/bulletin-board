@@ -1,37 +1,61 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import clsx from 'clsx';
+// import clsx from 'clsx';
 
-// import { connect } from 'react-redux';
-// import { reduxSelector, reduxActionCreator } from '../../../redux/exampleRedux.js';
+import { connect } from 'react-redux';
+import { getUser } from '../../../redux/userRedux.js';
+import { getOneForId } from '../../../redux/postsRedux.js';
 
-import styles from './PostEdit.module.scss';
+import { NotFound } from '../NotFound/NotFound';
+import { PostEditor } from '../../features/PostEditor/PostEditor';
 
-const Component = ({className, children}) => (
-  <div className={clsx(className, styles.root)}>
-    <h2>PostEdit</h2>
-    {children}
-  </div>
-);
+// import styles from './PostEdit.module.scss';
 
-Component.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
+const Component = ({ user, post }) => {
+  const [editedPost, changeEditedPost] = useState({
+    title: post ? post.title: '',
+    text: post? post.text : '',
+    price: post ? post.price: '',
+    tel: post ? post.tel : '',
+    address: post ? post.address : '',
+    photo: '',
+  });
+
+  const changeHandler = e => {
+    changeEditedPost({ ...editedPost, [e.target.name]: e.target.value });
+  };
+
+  const submitForm = () => {
+    console.log('You need to implement submint');
+  };
+  const canEdit = user ? user.type === 'admin' || user.email === post.email : false;
+  if (!post || !canEdit) return <NotFound />;
+  else {
+    return (
+      <PostEditor post={editedPost} changeHandler={changeHandler} submitForm={submitForm} />
+    );
+  }
 };
 
-// const mapStateToProps = state => ({
-//   someProp: reduxSelector(state),
-// });
+Component.propTypes = {
+  user: PropTypes.object,
+  post: PropTypes.object,
+};
+
+const mapStateToProps = (state, props) => ({
+  user: getUser(state),
+  post: getOneForId(state, props.match.params.id),
+});
 
 // const mapDispatchToProps = dispatch => ({
 //   someAction: arg => dispatch(reduxActionCreator(arg)),
 // });
 
-// const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
+const Container = connect(mapStateToProps)(Component);
 
 export {
-  Component as PostEdit,
-  // Container as PostEdit,
+  // Component as PostEdit,
+  Container as PostEdit,
   Component as PostEditComponent,
 };

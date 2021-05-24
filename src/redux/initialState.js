@@ -10,7 +10,7 @@ export const initialState = {
         email: 'joanna.doe@gmail.com',
         status: 'published',
         price: '40 $',
-        photo: 'https://images.pexels.com/photos/3823220/pexels-photo-3823220.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+        photo: '/images/boat.jpeg',
       },
       {
         id: '2',
@@ -22,7 +22,7 @@ export const initialState = {
         status: 'published',
         tel: '123456789',
         address: 'Zawada',
-        photo: 'https://images.pexels.com/photos/3330118/pexels-photo-3330118.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+        photo: '/images/house.jpeg',
 
       },
       {
