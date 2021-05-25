@@ -21,6 +21,8 @@ const Component = ({className, post, changeHandler, submitForm}) => {
   const [isFading, setIsFading] = useState(false);
   const [imgUrl, setImgUrl] = useState('');
   const [imgName, setImgName] = useState('');
+  const [titleErrorMes, setTitleErrorMes] = useState('');
+  const [textErrorMes, setTextErrorMes] = useState('');
 
   const setPhoto = e => {
     changeHandler(e);
@@ -39,6 +41,26 @@ const Component = ({className, post, changeHandler, submitForm}) => {
     setImgName('');
   };
 
+  const titleValidator = title => {
+    if (title && title.length < 10) setTitleErrorMes('Too short');
+    else setTitleErrorMes('');
+  };
+
+  const textValidator = text => {
+    if (text && text.length < 20) setTextErrorMes('Too short');
+    else setTextErrorMes('');
+  };
+
+  const titleChangeHandler = e => {
+    titleValidator(e.target.value);
+    changeHandler(e);
+  };
+
+  const textChangeHandler = e => {
+    textValidator(e.target.value);
+    changeHandler(e);
+  };
+
   return (
     <Grid className={clsx(className, styles.root)} container spacing={2} justify='center'>
       <Grid item container xs={12} md={6} alignContent='stretch'>
@@ -46,17 +68,19 @@ const Component = ({className, post, changeHandler, submitForm}) => {
           <form noValidate autoComplete='off' className={styles.form}>
             <TextField
               value={post.title}
-              onChange={changeHandler}
+              onChange={titleChangeHandler}
               name='title'
               id="title"
               label="Title"
               variant="outlined"
               fullWidth
               margin='normal'
+              error={!!titleErrorMes}
+              helperText={titleErrorMes}
             />
             <TextField
               value={post.text}
-              onChange={changeHandler}
+              onChange={textChangeHandler}
               name='text'
               id="text"
               label="Text"
@@ -65,6 +89,8 @@ const Component = ({className, post, changeHandler, submitForm}) => {
               rows={3}
               fullWidth
               margin='normal'
+              error={!!textErrorMes}
+              helperText={textErrorMes}
             />
             <TextField
               value={post.price}
@@ -144,7 +170,7 @@ Component.propTypes = {
     tel: PropTypes.string,
     address: PropTypes.string,
     photo: PropTypes.string,
-  }).isRequired,
+  }),
   imgName: PropTypes.string,
   imgUrl: PropTypes.string,
   changeHandler: PropTypes.func,
