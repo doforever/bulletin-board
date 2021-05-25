@@ -24,7 +24,9 @@ const Component = ({className, children, post, user, postRequest, loadPost}) => 
     loadPost();
   }, []);
 
-  if (!post) return <NotFound/>;
+  if (postRequest.active) return <div className={styles.root}><LinearProgress /></div>;
+  else if (postRequest.error) return <div className={styles.root}>< Alert severity="error" >Loading error</Alert ></div>;
+  else if (!post) return <NotFound/>;
   else {
     const canEdit = user ? user.type === 'admin' || user.email === post.email : false;
 
@@ -44,8 +46,6 @@ const Component = ({className, children, post, user, postRequest, loadPost}) => 
     return (
       <div className={clsx(className, styles.root)}>
         <Grid container spacing={2}>
-          {postRequest.active && <Grid item xs={12}><LinearProgress /></Grid>}
-          {postRequest.error && <Grid item xs={12}>< Alert severity="error" >Loading error</Alert ></Grid>}
           <Grid item xs={12}>
             <Paper className={styles.paper}>
               <Grid container alignItems='center'>

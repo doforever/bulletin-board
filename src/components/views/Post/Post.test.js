@@ -4,7 +4,12 @@ import { PostComponent } from './Post';
 
 describe('Component Post', () => {
   it('should render without crashing', () => {
-    const component = shallow(<PostComponent />);
+    const mockRequest = {
+      active: false,
+      error: false,
+    };
+
+    const component = shallow(<PostComponent postRequest={mockRequest}/>);
     expect(component).toBeTruthy();
   });
 });
