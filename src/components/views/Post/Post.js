@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import { getOneForId } from '../../../redux/postsRedux.js';
+import { getOneForId, loadOneRequest, getRequest  } from '../../../redux/postsRedux.js';
 import { getUser } from '../../../redux/userRedux.js';
 
 import Grid from '@material-ui/core/Grid';
@@ -14,10 +14,16 @@ import { NotFound } from '../NotFound/NotFound';
 import Link from '@material-ui/core/Link';
 import EditIcon from '@material-ui/icons/Edit';
 import { ActionButton } from '../../common/ActionButton/ActionButton';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Alert from '@material-ui/lab/Alert';
 
 import styles from './Post.module.scss';
 
-const Component = ({className, children, post, user}) => {
+const Component = ({className, children, post, user, postRequest, loadPost}) => {
+  useEffect(() => {
+    loadPost();
+  }, []);
+
   if (!post) return <NotFound/>;
   else {
     const canEdit = user ? user.type === 'admin' || user.email === post.email : false;
@@ -38,6 +44,8 @@ const Component = ({className, children, post, user}) => {
     return (
       <div className={clsx(className, styles.root)}>
         <Grid container spacing={2}>
+          {postRequest.active && <Grid item xs={12}><LinearProgress /></Grid>}
+          {postRequest.error && <Grid item xs={12}>< Alert severity="error" >Loading error</Alert ></Grid>}
           <Grid item xs={12}>
             <Paper className={styles.paper}>
               <Grid container alignItems='center'>
@@ -89,18 +97,21 @@ Component.propTypes = {
   className: PropTypes.string,
   post: PropTypes.object,
   user: PropTypes.object,
+  postRequest: PropTypes.object.isRequired,
+  loadPost: PropTypes.func,
 };
 
 const mapStateToProps = (state, props) => ({
   post: getOneForId(state, props.match.params.id),
   user: getUser(state),
+  postRequest: getRequest(state),
 });
 
-// const mapDispatchToProps = dispatch => ({
-//   someAction: arg => dispatch(reduxActionCreator(arg)),
-// });
+const mapDispatchToProps = (dispatch, props) => ({
+  loadPost: () => dispatch(loadOneRequest(props.match.params.id)),
+});
 
-const Container = connect(mapStateToProps)(Component);
+const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 export {
   // Component as Post,

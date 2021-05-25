@@ -35,6 +35,18 @@ export const loadPostsRequest = () => {
   };
 };
 
+export const loadOneRequest = id => {
+  return async dispatch => {
+    dispatch(fetchStarted());
+    try {
+      let res = await axios.get(`${API_URL}/post/${id}`);
+      dispatch(fetchSuccess(res.data));
+    } catch (e) {
+      dispatch(fetchError(e.message));
+    }
+  };
+};
+
 /* reducer */
 export const reducer = (statePart = [], action = {}) => {
   switch (action.type) {
@@ -48,13 +60,14 @@ export const reducer = (statePart = [], action = {}) => {
       };
     }
     case FETCH_SUCCESS: {
+      const postsArray = Array.isArray(action.payload) ? action.payload : [action.payload];
       return {
         ...statePart,
         loading: {
           active: false,
           error: false,
         },
-        data: action.payload,
+        data: postsArray,
       };
     }
     case FETCH_ERROR: {
