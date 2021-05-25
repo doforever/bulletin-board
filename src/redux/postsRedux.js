@@ -1,7 +1,11 @@
+import axios from 'axios';
+import { API_URL } from '../config.js';
+
 /* selectors */
 export const getAll = ({posts}) => posts.data;
 export const getOneForId = ({posts}, id) => posts.data.find(post => post.id === id);
 export const getForEmail = ({posts, user}) => posts.data.filter(post => user&& user.type === 'regUser' && post.email === user.email);
+export const getRequest = ({posts}) => posts.loading;
 
 /* action name creator */
 const reducerName = 'posts';
@@ -18,6 +22,18 @@ export const fetchSuccess = payload => ({ payload, type: FETCH_SUCCESS });
 export const fetchError = payload => ({ payload, type: FETCH_ERROR });
 
 /* thunk creators */
+export const loadPostsRequest = () => {
+  return async dispatch => {
+    dispatch(fetchStarted());
+    try {
+      let res = await axios.get(`${API_URL}/post`);
+      dispatch(fetchSuccess(res.data));
+
+    } catch (e) {
+      dispatch(fetchError(e.message));
+    }
+  };
+};
 
 /* reducer */
 export const reducer = (statePart = [], action = {}) => {
@@ -50,6 +66,7 @@ export const reducer = (statePart = [], action = {}) => {
         },
       };
     }
+
     default:
       return statePart;
   }
