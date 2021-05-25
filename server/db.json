@@ -8,7 +8,7 @@
       "lastUpdate": "2021-05-20",
       "email": "joanna.doe@gmail.com",
       "status": "published",
-      "price": "40 $",
+      "price": 40,
       "photo": "/images/boat.jpeg"
     },
     {
@@ -28,9 +28,78 @@
       "title": "Developer looking for a job",
       "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In felis.",
       "published": "2021-04-19",
-      "lastUpdate": "2021-05-20",
-      "email": "adam.doe@gmail.com",
-      "status": "published"
+      "lastUpdate": "2021-05-25T21:50:57.553Z",
+      "email": "joanna.doe@gmail.com",
+      "status": "published",
+      "price": 5,
+      "tel": "",
+      "address": "",
+      "photo": ""
+    },
+    {
+      "title": "rrrrrrrrrr",
+      "text": "werawrewarfwewfdsdddd",
+      "price": "",
+      "tel": "",
+      "address": "",
+      "photo": "",
+      "email": "joanna.doe@gmail.com",
+      "published": "2021-05-25T21:18:25.088Z",
+      "lastUpdate": "2021-05-25T21:18:25.088Z",
+      "status": "published",
+      "id": "gdEf7Ii"
+    },
+    {
+      "title": "dsdsdddsds",
+      "text": "sddsdsdsddsdsdsdssds",
+      "price": "",
+      "tel": "",
+      "address": "",
+      "photo": "",
+      "email": "joanna.doe@gmail.com",
+      "published": "2021-05-25T21:22:24.220Z",
+      "lastUpdate": "2021-05-25T21:22:24.220Z",
+      "status": "published",
+      "id": "bW3SdPr"
+    },
+    {
+      "title": "s",
+      "text": "d",
+      "price": "",
+      "tel": "",
+      "address": "",
+      "photo": "",
+      "email": "joanna.doe@gmail.com",
+      "published": "2021-05-25T21:25:31.709Z",
+      "lastUpdate": "2021-05-25T21:25:31.709Z",
+      "status": "published",
+      "id": "li692OL"
+    },
+    {
+      "title": "dsdsdsdsdsds",
+      "text": "sddsdsdsdsdsdsdsdsdsd",
+      "price": "5",
+      "tel": "4532",
+      "address": "2fsfdsffs",
+      "photo": "C:\\fakepath\\image_0.jpg",
+      "email": "joanna.doe@gmail.com",
+      "published": "2021-05-25T21:32:52.485Z",
+      "lastUpdate": "2021-05-25T21:32:52.485Z",
+      "status": "published",
+      "id": "APHnJUe"
+    },
+    {
+      "title": "dsdsdsdsdsd",
+      "text": "dsdsddsdsdsdsdsdsdsdsd",
+      "price": "4",
+      "tel": "",
+      "address": "",
+      "photo": "",
+      "email": "joanna.doe@gmail.com",
+      "published": "2021-05-25T21:39:40.257Z",
+      "lastUpdate": "2021-05-25T21:53:50.891Z",
+      "status": "published",
+      "id": "z3k9Yqb"
     }
   ]
 }

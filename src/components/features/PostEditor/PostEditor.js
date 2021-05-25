@@ -36,9 +36,11 @@ const Component = ({className, post, changeHandler, submitForm}) => {
   };
 
   const saveHander = () => {
-    submitForm();
-    setImgUrl('');
-    setImgName('');
+    if (!titleErrorMes && !textErrorMes) {
+      submitForm();
+      setImgUrl('');
+      setImgName('');
+    }
   };
 
   const titleValidator = title => {

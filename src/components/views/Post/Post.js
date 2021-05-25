@@ -54,7 +54,7 @@ const Component = ({className, children, post, user, postRequest, loadPost}) => 
                     {post.title}
                   </Typography>
                 </Grid>
-                {post.price && <Grid item><Typography variant='subtitle1'>{post.price}</Typography></Grid>}
+                {post.price && <Grid item><Typography variant='subtitle1'>$ {post.price}</Typography></Grid>}
               </Grid>
             </Paper>
           </Grid>

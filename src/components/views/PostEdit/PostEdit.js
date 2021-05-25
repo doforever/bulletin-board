@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
 import { getUser } from '../../../redux/userRedux.js';
-import { getOneForId, loadOneRequest, getRequest } from '../../../redux/postsRedux.js';
+import { getOneForId, loadOneRequest, getRequest, updatePostRequest } from '../../../redux/postsRedux.js';
 
 import { NotFound } from '../NotFound/NotFound';
 import { PostEditor } from '../../features/PostEditor/PostEditor';
@@ -14,7 +14,7 @@ import Alert from '@material-ui/lab/Alert';
 
 import styles from './PostEdit.module.scss';
 
-const Component = ({ user, post, loadPost, postRequest }) => {
+const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
   const [editedPost, changeEditedPost] = useState({
     title: '',
     text: '',
@@ -32,12 +32,34 @@ const Component = ({ user, post, loadPost, postRequest }) => {
     changeEditedPost({ ...editedPost, ...post, photo: '' });
   }, [post]);
 
+  const [isError, setError] = useState(false);
+
   const changeHandler = e => {
     changeEditedPost({ ...editedPost, [e.target.name]: e.target.value });
   };
 
-  const submitForm = () => {
-    console.log('You need to implement submint');
+  const submitForm = async () => {
+    if (editedPost.title && editedPost.text && user && user.email) {
+      const postData = {
+        ...post,
+        ...editedPost,
+        email: user.email,
+        lastUpdate: new Date(),
+        status: 'published',
+      };
+      await updatePost(postData);
+      changeEditedPost({
+        title: '',
+        text: '',
+        price: '',
+        tel: '',
+        address: '',
+        photo: '',
+      });
+      setError(false);
+    } else {
+      setError(true);
+    }
   };
 
   const canEdit = user ? user.type === 'admin' || user.email === post.email : false;
@@ -68,6 +90,7 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = (dispatch, props) => ({
   loadPost: () => dispatch(loadOneRequest(props.match.params.id)),
+  updatePost: postData => dispatch(updatePostRequest(props.match.params.id, postData)),
 });
 
 const Container = connect(mapStateToProps, mapDispatchToProps)(Component);

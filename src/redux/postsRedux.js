@@ -12,37 +12,63 @@ const reducerName = 'posts';
 const createActionName = name => `app/${reducerName}/${name}`;
 
 /* action types */
-const FETCH_START = createActionName('FETCH_START');
+const START_REQUEST = createActionName('START_REQUEST');
 const FETCH_SUCCESS = createActionName('FETCH_SUCCESS');
-const FETCH_ERROR = createActionName('FETCH_ERROR');
+const REQUEST_ERROR = createActionName('REQUEST_ERROR');
+const SAVE_POST = createActionName('SAVE_POST');
 
 /* action creators */
-export const fetchStarted = payload => ({ payload, type: FETCH_START });
+export const startRequest = payload => ({ payload, type: START_REQUEST });
 export const fetchSuccess = payload => ({ payload, type: FETCH_SUCCESS });
-export const fetchError = payload => ({ payload, type: FETCH_ERROR });
+export const requestError = payload => ({ payload, type: REQUEST_ERROR });
+export const savePost = payload => ({ payload, type: SAVE_POST });
 
 /* thunk creators */
 export const loadPostsRequest = () => {
   return async dispatch => {
-    dispatch(fetchStarted());
+    dispatch(startRequest());
     try {
       let res = await axios.get(`${API_URL}/post`);
       dispatch(fetchSuccess(res.data));
 
     } catch (e) {
-      dispatch(fetchError(e.message));
+      dispatch(requestError(e.message));
     }
   };
 };
 
 export const loadOneRequest = id => {
   return async dispatch => {
-    dispatch(fetchStarted());
+    dispatch(startRequest());
     try {
       let res = await axios.get(`${API_URL}/post/${id}`);
       dispatch(fetchSuccess(res.data));
     } catch (e) {
-      dispatch(fetchError(e.message));
+      dispatch(requestError(e.message));
+    }
+  };
+};
+
+export const savePostRequest = postData => {
+  return async dispatch => {
+    dispatch(startRequest());
+    try {
+      await axios.post(`${API_URL}/post`, postData);
+      dispatch(savePost());
+    } catch (e) {
+      dispatch(requestError(e.message));
+    }
+  };
+};
+
+export const updatePostRequest = (id, postData) => {
+  return async dispatch => {
+    dispatch(startRequest());
+    try {
+      await axios.put(`${API_URL}/post/${id}`, postData);
+      dispatch(savePost());
+    } catch (e) {
+      dispatch(requestError(e.message));
     }
   };
 };
@@ -50,7 +76,7 @@ export const loadOneRequest = id => {
 /* reducer */
 export const reducer = (statePart = [], action = {}) => {
   switch (action.type) {
-    case FETCH_START: {
+    case START_REQUEST: {
       return {
         ...statePart,
         loading: {
@@ -70,12 +96,21 @@ export const reducer = (statePart = [], action = {}) => {
         data: postsArray,
       };
     }
-    case FETCH_ERROR: {
+    case REQUEST_ERROR: {
       return {
         ...statePart,
         loading: {
           active: false,
           error: action.payload,
+        },
+      };
+    }
+    case SAVE_POST: {
+      return {
+        ...statePart,
+        loading: {
+          active: false,
+          error: false,
         },
       };
     }
