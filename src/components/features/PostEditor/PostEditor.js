@@ -25,7 +25,7 @@ const Component = ({className, post, changeHandler, submitForm}) => {
   const [imgName, setImgName] = useState('');
   const [titleErrorMes, setTitleErrorMes] = useState('');
   const [textErrorMes, setTextErrorMes] = useState('');
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const setPhoto = e => {
     changeHandler(e);

@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 // import clsx from 'clsx';
 
 import { connect } from 'react-redux';
 import { getUser } from '../../../redux/userRedux.js';
-import { savePostRequest } from '../../../redux/postsRedux.js';
+import { savePostRequest, getRequest } from '../../../redux/postsRedux.js';
 
 import { NotFound } from '../NotFound/NotFound';
 import { PostEditor } from '../../features/PostEditor/PostEditor';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 
 // import styles from './PostAdd.module.scss';
 
-const Component = ({ user, savePost}) => {
+const Component = ({ user, savePost, saveRequest}) => {
   const [newPost, changeNewPost] = useState({
     title: '',
     text: '',
@@ -22,13 +24,30 @@ const Component = ({ user, savePost}) => {
     photo: '',
   });
 
-  const [isError, setError] = useState(false);
+  const [isError, setIsError] = useState('false');
+
+  useEffect(() => {
+    if (saveRequest.error && saveRequest.error.type === 'SAVE_POST') {
+      setIsError(true);
+    } else setIsError (false);
+
+    if (saveRequest.success) {
+      changeNewPost({
+        title: '',
+        text: '',
+        price: '',
+        tel: '',
+        address: '',
+        photo: '',
+      });
+    }
+  }, [saveRequest]);
 
   const changeHandler = e => {
     changeNewPost({ ...newPost, [e.target.name]: e.target.value });
   };
 
-  const submitForm = async () => {
+  const submitForm = () => {
     if (newPost.title && newPost.text && user && user.email) {
       const date = new Date();
       const postData = {
@@ -38,25 +57,23 @@ const Component = ({ user, savePost}) => {
         lastUpdate: date,
         status: 'published',
       };
-      await savePost(postData);
-      changeNewPost({
-        title: '',
-        text: '',
-        price: '',
-        tel: '',
-        address: '',
-        photo: '',
-      });
-      setError(false);
-    } else {
-      setError(true);
+      savePost(postData);
     }
   };
 
   if (!user) return <NotFound />;
   else {
     return (
-      <PostEditor post={newPost} changeHandler={changeHandler} submitForm={submitForm} />
+      <div>
+        <PostEditor post={newPost} changeHandler={changeHandler} submitForm={submitForm} />
+        <Snackbar
+          open={isError}
+          autoHideDuration={3000}
+          onClose={() => setIsError(false)}
+        >
+          <Alert severity="error" variant='outlined'>Saving error. Please, try again.</Alert>
+        </Snackbar>
+      </div>
     );}
 };
 
@@ -66,6 +83,7 @@ Component.propTypes = {
 
 const mapStateToProps = state => ({
   user: getUser(state),
+  saveRequest: getRequest(state),
 });
 
 const mapDispatchToProps = dispatch => ({

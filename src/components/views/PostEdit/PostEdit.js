@@ -38,7 +38,7 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
     changeEditedPost({ ...editedPost, [e.target.name]: e.target.value });
   };
 
-  const submitForm = async () => {
+  const submitForm = () => {
     if (editedPost.title && editedPost.text && user && user.email) {
       const postData = {
         ...post,
@@ -47,18 +47,7 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
         lastUpdate: new Date(),
         status: 'published',
       };
-      await updatePost(postData);
-      changeEditedPost({
-        title: '',
-        text: '',
-        price: '',
-        tel: '',
-        address: '',
-        photo: '',
-      });
-      setError(false);
-    } else {
-      setError(true);
+      updatePost(postData);
     }
   };
 

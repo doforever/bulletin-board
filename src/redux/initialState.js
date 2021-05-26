@@ -1,9 +1,10 @@
 export const initialState = {
   posts: {
     data: [],
-    loading: {
+    request: {
       active: false,
       error: false,
+      success: false,
     },
   },
   user: null,
