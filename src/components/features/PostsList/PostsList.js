@@ -32,7 +32,7 @@ const Component = ({className, children, posts}) =>
               component='div'
             />
             <CardContent>
-              <Typography variant="h5" component="h2">
+              <Typography variant="h5" component="h2" noWrap>
                 {title}
               </Typography>
             </CardContent>
