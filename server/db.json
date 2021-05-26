@@ -5,11 +5,13 @@
       "title": "Boat for sale",
       "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In felis.",
       "published": "2021-04-20T21:18:25.088Z",
-      "lastUpdate": "2021-05-20T21:18:25.088Z",
+      "lastUpdate": "2021-05-26T07:22:01.822Z",
       "email": "joanna.doe@gmail.com",
       "status": "published",
       "price": 40,
-      "photo": "/images/boat.jpeg"
+      "photo": "",
+      "tel": "",
+      "address": ""
     },
     {
       "id": "2",
@@ -100,6 +102,32 @@
       "lastUpdate": "2021-05-25T21:53:50.891Z",
       "status": "published",
       "id": "z3k9Yqb"
+    },
+    {
+      "title": "kkkkkkkkkkkkkkkkkkkkky",
+      "text": "ukkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+      "price": "",
+      "tel": "",
+      "address": "",
+      "photo": "",
+      "email": "joanna.doe@gmail.com",
+      "published": "2021-05-26T07:31:12.359Z",
+      "lastUpdate": "2021-05-26T07:31:12.359Z",
+      "status": "published",
+      "id": "DfpQBkm"
+    },
+    {
+      "title": "sdwwwwwwwww",
+      "text": "dswdewwwwwwwwwwwwwwwww",
+      "price": "",
+      "tel": "",
+      "address": "",
+      "photo": "",
+      "email": "joanna.doe@gmail.com",
+      "published": "2021-05-26T07:31:59.727Z",
+      "lastUpdate": "2021-05-26T07:31:59.727Z",
+      "status": "published",
+      "id": "qzoJ0gF"
     }
   ]
 }

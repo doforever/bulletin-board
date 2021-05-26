@@ -14,6 +14,8 @@ import { ActionButton } from '../../common/ActionButton/ActionButton';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 
 import styles from './PostEditor.module.scss';
 
@@ -23,6 +25,7 @@ const Component = ({className, post, changeHandler, submitForm}) => {
   const [imgName, setImgName] = useState('');
   const [titleErrorMes, setTitleErrorMes] = useState('');
   const [textErrorMes, setTextErrorMes] = useState('');
+  const [open, setOpen] = React.useState(false);
 
   const setPhoto = e => {
     changeHandler(e);
@@ -36,11 +39,11 @@ const Component = ({className, post, changeHandler, submitForm}) => {
   };
 
   const saveHander = () => {
-    if (!titleErrorMes && !textErrorMes) {
+    if (post.title && post.text && !titleErrorMes && !textErrorMes) {
       submitForm();
       setImgUrl('');
       setImgName('');
-    }
+    } else setOpen(true);
   };
 
   const titleValidator = title => {
@@ -79,6 +82,7 @@ const Component = ({className, post, changeHandler, submitForm}) => {
               margin='normal'
               error={!!titleErrorMes}
               helperText={titleErrorMes}
+              required
             />
             <TextField
               value={post.text}
@@ -93,6 +97,7 @@ const Component = ({className, post, changeHandler, submitForm}) => {
               margin='normal'
               error={!!textErrorMes}
               helperText={textErrorMes}
+              required
             />
             <TextField
               value={post.price}
@@ -159,6 +164,13 @@ const Component = ({className, post, changeHandler, submitForm}) => {
           <img src={imgUrl} alt='thumbnail' className={clsx(styles.photo, isFading && styles.fadeIn)} />
         </Paper>
       </Grid>}
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        onClose={() => setOpen(false)}
+      >
+        <Alert severity="warning" variant='outlined'>Some fields are missing or incorrect</Alert>
+      </Snackbar>
     </Grid>
   );
 };
