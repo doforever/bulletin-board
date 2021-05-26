@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import { getOneForId, loadOneRequest, getRequest  } from '../../../redux/postsRedux.js';
+import { getCurrent, loadOneRequest, getRequest  } from '../../../redux/postsRedux.js';
 import { getUser } from '../../../redux/userRedux.js';
 
 import Grid from '@material-ui/core/Grid';
@@ -28,7 +28,7 @@ const Component = ({className, children, post, user, postRequest, loadPost}) => 
   else if (postRequest.error) return <div className={styles.root}>< Alert severity="error" >Loading error</Alert ></div>;
   else if (!post) return <NotFound/>;
   else {
-    const canEdit = user ? user.type === 'admin' || user.email === post.email : false;
+    const canEdit = user ? user.type === 'admin' || user.email === post.author : false;
 
     const image = post.photo
       ? (<Grid item xs={12} md={6}>
@@ -36,10 +36,10 @@ const Component = ({className, children, post, user, postRequest, loadPost}) => 
       </Grid>)
       : '';
 
-    const localization = post.address
+    const location = post.address
       ? (<Grid item xs>
-        <Typography variant='h6' component='h2'>Localization</Typography>
-        <Typography>{post.address}</Typography>
+        <Typography variant='h6' component='h2'>Location</Typography>
+        <Typography>{post.location}</Typography>
       </Grid>)
       : '';
 
@@ -67,20 +67,20 @@ const Component = ({className, children, post, user, postRequest, loadPost}) => 
                     {post.text}
                   </Typography>
                 </Grid>
-                {localization}
+                {location}
                 <Grid item xs>
                   <Typography variant='h6' component='h2'> Contact author</Typography>
                   <Typography component='address'>
-                    <Link href={`mailto:${post.email}`}>{post.email}</Link><br/>
-                    {post.tel && `tel: ${post.tel}`}<br/>
+                    <Link href={`mailto:${post.author}`}>{post.author}</Link><br/>
+                    {post.phone && `phone: ${post.phone}`}<br/>
                   </Typography>
                 </Grid>
               </Grid>
             </Paper>
           </Grid>
           <Grid item xs={12}>
-            Published: {new Date(post.published).toLocaleDateString()} <br/>
-          Last update: {new Date(post.lastUpdate).toLocaleDateString()}
+            Published: {new Date(post.created).toLocaleDateString()} <br/>
+          Last update: {new Date(post.updated).toLocaleDateString()}
           </Grid>
           {children}
         </Grid>
@@ -102,7 +102,7 @@ Component.propTypes = {
 };
 
 const mapStateToProps = (state, props) => ({
-  post: getOneForId(state, props.match.params.id),
+  post: getCurrent(state, props.match.params.id),
   user: getUser(state),
   postRequest: getRequest(state),
 });

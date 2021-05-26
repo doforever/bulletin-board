@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
 import { getUser } from '../../../redux/userRedux.js';
-import { getOneForId, loadOneRequest, getRequest, updatePostRequest } from '../../../redux/postsRedux.js';
+import { getCurrent, loadOneRequest, getRequest, updatePostRequest } from '../../../redux/postsRedux.js';
 
 import { NotFound } from '../NotFound/NotFound';
 import { PostEditor } from '../../features/PostEditor/PostEditor';
@@ -20,8 +20,8 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
     title: '',
     text: '',
     price: '',
-    tel: '',
-    address: '',
+    phone: '',
+    location: '',
     photo: '',
   });
 
@@ -55,15 +55,15 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
       const postData = {
         ...post,
         ...editedPost,
-        email: user.email,
-        lastUpdate: new Date(),
+        author: user.email,
+        updated: new Date(),
         status: 'published',
       };
       updatePost(postData);
     }
   };
 
-  const canEdit = user && post && (user.type === 'admin' || user.email === post.email);
+  const canEdit = user && post && (user.type === 'admin' || user.email === post.author);
 
   if (postRequest.active && postRequest.type === 'LOAD_POST') return <div className={styles.root}><LinearProgress /></div>;
   else if (postRequest.error && postRequest.type === 'LOAD_POST') return <div className={styles.root}>< Alert severity="error" >Loading error</Alert ></div>;
@@ -100,7 +100,7 @@ Component.propTypes = {
 
 const mapStateToProps = (state, props) => ({
   user: getUser(state),
-  post: getOneForId(state, props.match.params.id),
+  post: getCurrent(state, props.match.params.id),
   postRequest: getRequest(state),
 });
 

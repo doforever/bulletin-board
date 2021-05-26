@@ -113,20 +113,21 @@ const Component = ({className, post, changeHandler, submitForm}) => {
               }}
             />
             <TextField
-              value={post.tel}
+              value={post.phone}
               onChange={changeHandler}
-              name='tel'
-              id="tel"
-              label="Tel"
+              name='phone'
+              id="phone"
+              label="Phone"
               variant="outlined"
-              fullWidth type='tel'
+              fullWidth
+              type='tel'
               margin='normal'
             />
             <TextField
-              value={post.address}
+              value={post.location}
               onChange={changeHandler}
-              name='address'
-              id="address"
+              name='location'
+              id="location"
               label="Address"
               variant="outlined"
               multiline
@@ -181,8 +182,8 @@ Component.propTypes = {
     title: PropTypes.string,
     text: PropTypes.string,
     price: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    tel: PropTypes.string,
-    address: PropTypes.string,
+    phone: PropTypes.string,
+    location: PropTypes.string,
     photo: PropTypes.string,
   }),
   imgName: PropTypes.string,

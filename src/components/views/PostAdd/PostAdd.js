@@ -19,8 +19,8 @@ const Component = ({ user, savePost, postRequest}) => {
     title: '',
     text: '',
     price: '',
-    tel: '',
-    address: '',
+    phone: '',
+    location: '',
     photo: '',
   });
 
@@ -38,8 +38,8 @@ const Component = ({ user, savePost, postRequest}) => {
         title: '',
         text: '',
         price: '',
-        tel: '',
-        address: '',
+        phone: '',
+        location: '',
         photo: '',
       });
     }
@@ -54,9 +54,9 @@ const Component = ({ user, savePost, postRequest}) => {
       const date = new Date();
       const postData = {
         ...newPost,
-        email: user.email,
-        published: date,
-        lastUpdate: date,
+        author: user.email,
+        created: date,
+        updated: date,
         status: 'published',
       };
       savePost(postData);
