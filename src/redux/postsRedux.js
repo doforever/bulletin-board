@@ -26,49 +26,49 @@ export const postSaved = payload => ({ payload, type: SAVE_POST });
 /* thunk creators */
 export const loadPostsRequest = () => {
   return async dispatch => {
-    dispatch(startRequest());
+    dispatch(startRequest('LOAD_POSTS'));
     try {
       let res = await axios.get(`${API_URL}/post`);
       dispatch(fetchSuccess(res.data));
 
     } catch (e) {
-      dispatch(requestError({type: 'LOAD_POSTS', message: e.message}));
+      dispatch(requestError(e.message));
     }
   };
 };
 
 export const loadOneRequest = id => {
   return async dispatch => {
-    dispatch(startRequest());
+    dispatch(startRequest('LOAD_POST'));
     try {
       let res = await axios.get(`${API_URL}/post/${id}`);
       dispatch(fetchSuccess(res.data));
     } catch (e) {
-      dispatch(requestError({type: 'LOAD_ONE', message: e.message}));
+      dispatch(requestError(e.message));
     }
   };
 };
 
 export const savePostRequest = postData => {
   return async dispatch => {
-    dispatch(startRequest());
+    dispatch(startRequest('SAVE_POST'));
     try {
       const res = await axios.post(`${API_URL}/post`, postData);
       dispatch(postSaved(res.data));
     } catch (e) {
-      dispatch(requestError({type: 'SAVE_POST', message: e.message}));
+      dispatch(requestError(e.message));
     }
   };
 };
 
 export const updatePostRequest = (id, postData) => {
   return async dispatch => {
-    dispatch(startRequest());
+    dispatch(startRequest('UPDATE_POST'));
     try {
       const res = await axios.put(`${API_URL}/post/${id}`, postData);
       dispatch(postSaved(res.data));
     } catch (e) {
-      dispatch(requestError({type: 'UPDATE_POST', message: e.message}));
+      dispatch(requestError(e.message));
     }
   };
 };
@@ -80,6 +80,7 @@ export const reducer = (statePart = [], action = {}) => {
       return {
         ...statePart,
         request: {
+          type: action.payload,
           active: true,
           error: false,
           success: false,
@@ -91,6 +92,7 @@ export const reducer = (statePart = [], action = {}) => {
       return {
         ...statePart,
         request: {
+          ...statePart.request,
           active: false,
           error: false,
           success: true,
@@ -102,6 +104,7 @@ export const reducer = (statePart = [], action = {}) => {
       return {
         ...statePart,
         request: {
+          ...statePart.request,
           active: false,
           error: action.payload,
           success: false,
@@ -112,11 +115,11 @@ export const reducer = (statePart = [], action = {}) => {
       return {
         ...statePart,
         request: {
+          ...statePart.request,
           active: false,
           error: false,
           success: true,
         },
-        data: [action.payload],
       };
     }
 

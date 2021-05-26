@@ -15,22 +15,23 @@
     },
     {
       "id": "2",
-      "title": "House for rent",
+      "title": "House for re",
       "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In felis.",
       "published": "2021-04-21T21:18:25.088Z",
-      "lastUpdate": "2021-05-20T21:18:25.088Z",
-      "email": "jon.doe@gmail.com",
+      "lastUpdate": "2021-05-26T10:00:56.144Z",
+      "email": "joanna.doe@gmail.com",
       "status": "published",
       "tel": "123456789",
       "address": "Zawada",
-      "photo": "/images/house.jpeg"
+      "photo": "",
+      "price": ""
     },
     {
       "id": "3",
       "title": "Developer looking for a job",
       "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In felis.",
       "published": "2021-04-19T21:18:25.088Z",
-      "lastUpdate": "2021-05-25T21:50:57.553Z",
+      "lastUpdate": "2021-05-26T09:48:12.269Z",
       "email": "joanna.doe@gmail.com",
       "status": "published",
       "price": 5,
@@ -167,6 +168,58 @@
       "lastUpdate": "2021-05-26T09:16:28.425Z",
       "status": "published",
       "id": "NZPXb2d"
+    },
+    {
+      "title": "sssssssssssssssssssss",
+      "text": "sssssssssssssssssssssss",
+      "price": "",
+      "tel": "",
+      "address": "",
+      "photo": "",
+      "email": "joanna.doe@gmail.com",
+      "published": "2021-05-26T09:48:21.250Z",
+      "lastUpdate": "2021-05-26T09:48:21.250Z",
+      "status": "published",
+      "id": "8AzVKyT"
+    },
+    {
+      "title": "sssssssssssssssss",
+      "text": "ssssssssssssssssssss",
+      "price": "",
+      "tel": "",
+      "address": "",
+      "photo": "",
+      "email": "joanna.doe@gmail.com",
+      "published": "2021-05-26T09:48:29.037Z",
+      "lastUpdate": "2021-05-26T09:48:29.037Z",
+      "status": "published",
+      "id": "y_qqc7F"
+    },
+    {
+      "title": "ssssssssssssss",
+      "text": "ssssssssssssssssssss",
+      "price": "",
+      "tel": "",
+      "address": "",
+      "photo": "",
+      "email": "joanna.doe@gmail.com",
+      "published": "2021-05-26T09:48:48.334Z",
+      "lastUpdate": "2021-05-26T09:48:48.334Z",
+      "status": "published",
+      "id": "7r3zEeE"
+    },
+    {
+      "title": "ssssssssssssssss",
+      "text": "sssssssssssssssssssssssssss",
+      "price": "",
+      "tel": "",
+      "address": "",
+      "photo": "",
+      "email": "joanna.doe@gmail.com",
+      "published": "2021-05-26T09:50:32.728Z",
+      "lastUpdate": "2021-05-26T09:50:32.728Z",
+      "status": "published",
+      "id": "RVinkH-"
     }
   ]
 }

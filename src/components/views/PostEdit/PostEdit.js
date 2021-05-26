@@ -11,6 +11,7 @@ import { NotFound } from '../NotFound/NotFound';
 import { PostEditor } from '../../features/PostEditor/PostEditor';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Alert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import styles from './PostEdit.module.scss';
 
@@ -32,7 +33,18 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
     changeEditedPost({ ...editedPost, ...post, photo: '' });
   }, [post]);
 
-  const [isError, setError] = useState(false);
+  useEffect(() => {
+    if (postRequest.error && postRequest.type === 'UPDATE_POST') {
+      setIsError(true);
+    } else setIsError(false);
+
+    if (postRequest.success && postRequest.type === 'UPDATE_POST') {
+      setIsSuccess(true);
+    }
+  }, [postRequest]);
+
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const changeHandler = e => {
     changeEditedPost({ ...editedPost, [e.target.name]: e.target.value });
@@ -51,15 +63,30 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
     }
   };
 
-  const canEdit = user ? user.type === 'admin' || user.email === post.email : false;
+  const canEdit = user && post && (user.type === 'admin' || user.email === post.email);
 
-
-  if (postRequest.active) return <div className={styles.root}><LinearProgress /></div>;
-  else if (postRequest.error) return <div className={styles.root}>< Alert severity="error" >Loading error</Alert ></div>;
+  if (postRequest.active && postRequest.type === 'LOAD_POST') return <div className={styles.root}><LinearProgress /></div>;
+  else if (postRequest.error && postRequest.type === 'LOAD_POST') return <div className={styles.root}>< Alert severity="error" >Loading error</Alert ></div>;
   else if (!post || !canEdit) return <NotFound />;
   else {
     return (
-      <PostEditor post={editedPost} changeHandler={changeHandler} submitForm={submitForm} />
+      <div>
+        <PostEditor post={editedPost} changeHandler={changeHandler} submitForm={submitForm} />
+        <Snackbar
+          open={isError}
+          autoHideDuration={3000}
+          onClose={() => setIsError(false)}
+        >
+          <Alert severity="error" variant='outlined'>Saving error. Please, try again.</Alert>
+        </Snackbar>
+        <Snackbar
+          open={isSuccess}
+          autoHideDuration={3000}
+          onClose={() => setIsSuccess(false)}
+        >
+          <Alert severity="success" variant='outlined'>Post saved!</Alert>
+        </Snackbar>
+      </div>
     );
   }
 };

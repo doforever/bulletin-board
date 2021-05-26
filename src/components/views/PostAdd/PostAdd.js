@@ -14,7 +14,7 @@ import Alert from '@material-ui/lab/Alert';
 
 // import styles from './PostAdd.module.scss';
 
-const Component = ({ user, savePost, saveRequest}) => {
+const Component = ({ user, savePost, postRequest}) => {
   const [newPost, changeNewPost] = useState({
     title: '',
     text: '',
@@ -25,13 +25,15 @@ const Component = ({ user, savePost, saveRequest}) => {
   });
 
   const [isError, setIsError] = useState('false');
+  const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
-    if (saveRequest.error && saveRequest.error.type === 'SAVE_POST') {
+    if (postRequest.error && postRequest.type === 'SAVE_POST') {
       setIsError(true);
     } else setIsError (false);
 
-    if (saveRequest.success) {
+    if (postRequest.success && postRequest.type === 'SAVE_POST') {
+      setIsSuccess(true);
       changeNewPost({
         title: '',
         text: '',
@@ -41,7 +43,7 @@ const Component = ({ user, savePost, saveRequest}) => {
         photo: '',
       });
     }
-  }, [saveRequest]);
+  }, [postRequest]);
 
   const changeHandler = e => {
     changeNewPost({ ...newPost, [e.target.name]: e.target.value });
@@ -73,6 +75,13 @@ const Component = ({ user, savePost, saveRequest}) => {
         >
           <Alert severity="error" variant='outlined'>Saving error. Please, try again.</Alert>
         </Snackbar>
+        <Snackbar
+          open={isSuccess}
+          autoHideDuration={3000}
+          onClose={() => setIsSuccess(false)}
+        >
+          <Alert severity="success" variant='outlined'>Post saved!</Alert>
+        </Snackbar>
       </div>
     );}
 };
@@ -83,7 +92,7 @@ Component.propTypes = {
 
 const mapStateToProps = state => ({
   user: getUser(state),
-  saveRequest: getRequest(state),
+  postRequest: getRequest(state),
 });
 
 const mapDispatchToProps = dispatch => ({
