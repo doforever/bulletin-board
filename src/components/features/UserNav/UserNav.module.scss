@@ -1,5 +1,9 @@
 @import '../../../styles/settings.scss';
 
 .root {
-  padding: $base-size 0;
+ display: flex;
+
+ .active {
+   color: #f50057;;
+ }
 }

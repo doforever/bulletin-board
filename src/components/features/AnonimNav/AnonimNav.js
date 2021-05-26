@@ -6,18 +6,18 @@ import clsx from 'clsx';
 // import { connect } from 'react-redux';
 // import { reduxSelector, reduxActionCreator } from '../../../redux/exampleRedux.js';
 
-import { Alert, AlertTitle } from '@material-ui/lab';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
-import styles from './NotFound.module.scss';
+import styles from './AnonimNav.module.scss';
 
-const Component = ({className, children}) => (
-  <div className={clsx(className, styles.root)}>
-    <Alert severity="error">
-      <AlertTitle>Not Found</AlertTitle>
-        Page not found - <strong>try something else</strong>
-    </Alert>
-    {children}
-  </div>
+const Component = ({ className, children }) => (
+  <List component="nav" className={clsx(className, styles.root)}>
+    <ListItem button component='a' href='https://google.com'>
+      <ListItemText primary="Login"/>
+    </ListItem>
+  </List>
 );
 
 Component.propTypes = {
@@ -36,7 +36,7 @@ Component.propTypes = {
 // const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 export {
-  Component as NotFound,
-  // Container as NotFound,
-  Component as NotFoundComponent,
+  Component as AnonimNav,
+  // Container as AnonimNav,
+  Component as AnonimNavComponent,
 };
