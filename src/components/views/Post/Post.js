@@ -79,8 +79,8 @@ const Component = ({className, children, post, user, postRequest, loadPost}) => 
             </Paper>
           </Grid>
           <Grid item xs={12}>
-          Published: {post.published} <br/>
-          Last update: {post.lastUpdate}
+            Published: {new Date(post.published).toLocaleDateString()} <br/>
+          Last update: {new Date(post.lastUpdate).toLocaleDateString()}
           </Grid>
           {children}
         </Grid>
