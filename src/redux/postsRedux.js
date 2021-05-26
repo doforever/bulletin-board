@@ -4,7 +4,7 @@ import { API_URL } from '../config.js';
 /* selectors */
 export const getAll = ({posts}) => posts.data;
 export const getOneForId = ({posts}, id) => posts.data.find(post => post.id === id);
-export const getForEmail = ({posts, user}) => posts.data.filter(post => user&& user.type === 'regUser' && post.email === user.email);
+export const getForEmail = ({posts, user}) => posts.data.filter(post => user && post.email === user.email);
 export const getRequest = ({posts}) => posts.request;
 
 /* action name creator */
@@ -28,7 +28,7 @@ export const loadPostsRequest = () => {
   return async dispatch => {
     dispatch(startRequest('LOAD_POSTS'));
     try {
-      let res = await axios.get(`${API_URL}/post`);
+      let res = await axios.get(`${API_URL}/posts`);
       dispatch(fetchSuccess(res.data));
 
     } catch (e) {
@@ -41,7 +41,7 @@ export const loadOneRequest = id => {
   return async dispatch => {
     dispatch(startRequest('LOAD_POST'));
     try {
-      let res = await axios.get(`${API_URL}/post/${id}`);
+      let res = await axios.get(`${API_URL}/posts/${id}`);
       dispatch(fetchSuccess(res.data));
     } catch (e) {
       dispatch(requestError(e.message));
@@ -53,7 +53,7 @@ export const savePostRequest = postData => {
   return async dispatch => {
     dispatch(startRequest('SAVE_POST'));
     try {
-      const res = await axios.post(`${API_URL}/post`, postData);
+      const res = await axios.post(`${API_URL}/posts`, postData);
       dispatch(postSaved(res.data));
     } catch (e) {
       dispatch(requestError(e.message));
@@ -65,7 +65,7 @@ export const updatePostRequest = (id, postData) => {
   return async dispatch => {
     dispatch(startRequest('UPDATE_POST'));
     try {
-      const res = await axios.put(`${API_URL}/post/${id}`, postData);
+      const res = await axios.put(`${API_URL}/posts/${id}`, postData);
       dispatch(postSaved(res.data));
     } catch (e) {
       dispatch(requestError(e.message));
