@@ -3,6 +3,7 @@ import { API_URL } from '../config.js';
 
 /* selectors */
 export const getAll = ({posts}) => posts.data;
+export const getAllPublished = ({ posts }) => posts.data.filter(post => post.status === 'published');
 export const getOneForId = ({posts}, id) => posts.data.find(post => post.id === id);
 export const getForEmail = ({posts, user}) => posts.data.filter(post => user && post.email === user.email);
 export const getRequest = ({posts}) => posts.request;
@@ -24,15 +25,15 @@ export const requestError = payload => ({ payload, type: REQUEST_ERROR });
 export const postSaved = payload => ({ payload, type: SAVE_POST });
 
 /* thunk creators */
-export const loadPostsRequest = () => {
+export const fetchPublished = () => {
   return async dispatch => {
     dispatch(startRequest('LOAD_POSTS'));
     try {
-      let res = await axios.get(`${API_URL}/posts`);
+      let res = await axios.get(`${API_URL}/api/posts`);
       dispatch(fetchSuccess(res.data));
 
     } catch (e) {
-      dispatch(requestError(e.message));
+      dispatch(requestError(e.message || true));
     }
   };
 };
@@ -41,10 +42,10 @@ export const loadOneRequest = id => {
   return async dispatch => {
     dispatch(startRequest('LOAD_POST'));
     try {
-      let res = await axios.get(`${API_URL}/posts/${id}`);
+      let res = await axios.get(`${API_URL}/api/posts/${id}`);
       dispatch(fetchSuccess(res.data));
     } catch (e) {
-      dispatch(requestError(e.message));
+      dispatch(requestError(e.message || true));
     }
   };
 };
@@ -53,10 +54,10 @@ export const savePostRequest = postData => {
   return async dispatch => {
     dispatch(startRequest('SAVE_POST'));
     try {
-      const res = await axios.post(`${API_URL}/posts`, postData);
+      const res = await axios.post(`${API_URL}/api/posts`, postData);
       dispatch(postSaved(res.data));
     } catch (e) {
-      dispatch(requestError(e.message));
+      dispatch(requestError(e.message || true));
     }
   };
 };
@@ -65,10 +66,10 @@ export const updatePostRequest = (id, postData) => {
   return async dispatch => {
     dispatch(startRequest('UPDATE_POST'));
     try {
-      const res = await axios.put(`${API_URL}/posts/${id}`, postData);
+      const res = await axios.put(`${API_URL}/api/posts/${id}`, postData);
       dispatch(postSaved(res.data));
     } catch (e) {
-      dispatch(requestError(e.message));
+      dispatch(requestError(e.message || true));
     }
   };
 };
@@ -89,6 +90,7 @@ export const reducer = (statePart = [], action = {}) => {
     }
     case FETCH_SUCCESS: {
       const postsArray = Array.isArray(action.payload) ? action.payload : [action.payload];
+      const postData = postsArray.map(({_id, ...other}) => ({id: _id, ...other}));
       return {
         ...statePart,
         request: {
@@ -97,7 +99,7 @@ export const reducer = (statePart = [], action = {}) => {
           error: false,
           success: true,
         },
-        data: postsArray,
+        data: postData,
       };
     }
     case REQUEST_ERROR: {
