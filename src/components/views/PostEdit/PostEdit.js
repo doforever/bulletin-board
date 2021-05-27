@@ -22,7 +22,7 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
     price: '',
     phone: '',
     location: '',
-    photo: '',
+    photo: null,
   });
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
   }, []);
 
   useEffect(() => {
-    changeEditedPost({ ...editedPost, ...post, photo: '' });
+    changeEditedPost({ ...editedPost, ...post});
   }, [post]);
 
   useEffect(() => {
@@ -48,6 +48,10 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
 
   const changeHandler = e => {
     changeEditedPost({ ...editedPost, [e.target.name]: e.target.value });
+  };
+
+  const photoChangeHandler = photo => {
+    changeEditedPost({ ...editedPost, photo });
   };
 
   const submitForm = () => {
@@ -69,7 +73,12 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
   else {
     return (
       <div>
-        <PostEditor post={editedPost} changeHandler={changeHandler} submitForm={submitForm} />
+        <PostEditor
+          post={editedPost}
+          changeHandler={changeHandler}
+          photoChangeHandler={photoChangeHandler}
+          submitForm={submitForm}
+        />
         <Snackbar
           open={isError}
           autoHideDuration={3000}

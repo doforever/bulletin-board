@@ -21,7 +21,7 @@ const Component = ({ user, savePost, postRequest}) => {
     price: '',
     phone: '',
     location: '',
-    photo: '',
+    photo: null,
   });
 
   const [isError, setIsError] = useState('false');
@@ -40,13 +40,17 @@ const Component = ({ user, savePost, postRequest}) => {
         price: '',
         phone: '',
         location: '',
-        photo: '',
+        photo: null,
       });
     }
   }, [postRequest]);
 
   const changeHandler = e => {
     changeNewPost({ ...newPost, [e.target.name]: e.target.value });
+  };
+
+  const photoChangeHandler = photo => {
+    changeNewPost({ ...newPost, photo });
   };
 
   const submitForm = () => {
@@ -64,7 +68,12 @@ const Component = ({ user, savePost, postRequest}) => {
   else {
     return (
       <div>
-        <PostEditor post={newPost} changeHandler={changeHandler} submitForm={submitForm} />
+        <PostEditor
+          post={newPost}
+          changeHandler={changeHandler}
+          photoChangeHandler={photoChangeHandler}
+          submitForm={submitForm}
+        />
         <Snackbar
           open={isError}
           autoHideDuration={3000}
