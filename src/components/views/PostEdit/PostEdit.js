@@ -55,6 +55,7 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
       const postData = {
         ...post,
         ...editedPost,
+        status: 'published',
       };
       updatePost(postData);
     }

@@ -30,7 +30,7 @@ router.get('/posts/:id', async (req, res) => {
 });
 
 router.post('/posts', async (req, res) => {
-  const { author, title, text, photo, price, phone, location } = req.body;
+  const { author, title, text, photo, price, phone, location, status } = req.body;
 
   // Title validation
   const isTitleValid = title && title.length > 10;
@@ -42,14 +42,17 @@ router.post('/posts', async (req, res) => {
   const emailPattern = new RegExp(/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.([a-z]{1,6}))$/i);
   const isEmailValid = emailPattern.test(author);
 
-  if ( isTitleValid && isTextValid && isEmailValid ) {
+  // Status validation
+  const isStatusValid = status && ['published', 'draft', 'closed'].includes(status);
+
+  if ( isTitleValid && isTextValid && isEmailValid && isStatusValid) {
     const date = new Date();
     try {
       const newPost = new Post({
         author,
         created: date,
         updated: date,
-        status: 'published',
+        status,
         title,
         text,
         photo,
@@ -69,7 +72,7 @@ router.post('/posts', async (req, res) => {
 });
 
 router.put('/posts/:id', async (req, res) => {
-  const { title, text, photo, price, phone, location } = req.body;
+  const { title, text, photo, price, phone, location, status } = req.body;
 
   // Title validation
   const isTitleValid = title && title.length > 10;
@@ -77,12 +80,15 @@ router.put('/posts/:id', async (req, res) => {
   // Text validation
   const isTextValid = text && text.length > 20;
 
-  if (isTitleValid && isTextValid) {
+  // Status validation
+  const isStatusValid = status && ['published', 'draft', 'closed'].includes(status);
+
+  if (isTitleValid && isTextValid && isStatusValid) {
     const date = new Date();
     try {
       const post = await Post.findById(req.params.id);
       if (post) {
-        Object.assign(post, { title, text, photo, price, phone, location, updated: date });
+        Object.assign(post, { title, text, photo, price, phone, location, updated: date, status });
         const updatedPost = await post.save();
         res.json(updatedPost);
       }

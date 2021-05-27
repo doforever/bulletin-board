@@ -54,6 +54,7 @@ const Component = ({ user, savePost, postRequest}) => {
       const postData = {
         ...newPost,
         author: user.email,
+        status: 'published',
       };
       savePost(postData);
     }
