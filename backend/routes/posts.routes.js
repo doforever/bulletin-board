@@ -29,4 +29,17 @@ router.get('/posts/:id', async (req, res) => {
   }
 });
 
+router.post('/posts', async (req, res) => {
+  const { author, created, updated, status, title, text, photo, price, phone, location } = req.body;
+  try {
+    const newPost = new Post({author, created, updated, status, title, text, photo, price, phone, location});
+    const saved = await newPost.save();
+    res.status(201).json(saved);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).json({message: 'Post saving error'});
+  }
+});
+
 module.exports = router;

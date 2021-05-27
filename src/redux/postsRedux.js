@@ -18,6 +18,7 @@ const FETCH_SUCCESS = createActionName('FETCH_SUCCESS');
 const FETCH_POST_SUCCESS = createActionName('FETCH_POST_SUCCESS');
 const REQUEST_ERROR = createActionName('REQUEST_ERROR');
 const SAVE_POST = createActionName('SAVE_POST');
+const UPDATE_POST = createActionName('UPDATE_POST');
 
 /* action creators */
 export const startRequest = payload => ({ payload, type: START_REQUEST });
@@ -25,6 +26,7 @@ export const fetchSuccess = payload => ({ payload, type: FETCH_SUCCESS });
 export const fetchPostSuccess = payload => ({ payload, type: FETCH_POST_SUCCESS });
 export const requestError = payload => ({ payload, type: REQUEST_ERROR });
 export const postSaved = payload => ({ payload, type: SAVE_POST });
+export const postUpdated = payload => ({ payload, type: UPDATE_POST });
 
 /* thunk creators */
 export const fetchPublished = () => {
@@ -69,7 +71,7 @@ export const updatePostRequest = (id, postData) => {
     dispatch(startRequest('UPDATE_POST'));
     try {
       const res = await axios.put(`${API_URL}/api/posts/${id}`, postData);
-      dispatch(postSaved(res.data));
+      dispatch(postUpdated(res.data));
     } catch (e) {
       dispatch(requestError(e.message || true));
     }
@@ -91,7 +93,7 @@ export const reducer = (statePart = [], action = {}) => {
       };
     }
     case FETCH_SUCCESS: {
-      const postData = action.payload.map(({_id, ...other}) => ({id: _id, ...other}));
+      const posts = action.payload.map(({_id, ...other}) => ({id: _id, ...other}));
       return {
         ...statePart,
         request: {
@@ -100,7 +102,7 @@ export const reducer = (statePart = [], action = {}) => {
           error: false,
           success: true,
         },
-        data: postData,
+        data: posts,
       };
     }
     case FETCH_POST_SUCCESS: {
@@ -129,6 +131,8 @@ export const reducer = (statePart = [], action = {}) => {
       };
     }
     case SAVE_POST: {
+      const { _id: id, author, created, title, photo, status } = action.payload;
+      const postData = {id, author, created, title, photo, status };
       return {
         ...statePart,
         request: {
@@ -137,9 +141,25 @@ export const reducer = (statePart = [], action = {}) => {
           error: false,
           success: true,
         },
+        data: statePart.data.length > 0 ? [...statePart.data, postData] : statePart.data,
       };
     }
-
+    case UPDATE_POST: {
+      const { _id: id, author, created, title, photo, status } = action.payload;
+      const posts = statePart.data.length > 0
+        ? statePart.data.map(post => post.id === id ? {id, author, created, title, photo, status } : post)
+        : [];
+      return {
+        ...statePart,
+        request: {
+          ...statePart.request,
+          active: false,
+          error: false,
+          success: true,
+        },
+        data: posts,
+      };
+    }
     default:
       return statePart;
   }
