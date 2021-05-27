@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import { NumberFormatCustom } from '../../common/NumberFormatCustom/NumberFormatCustom';
+import { PhoneFormat } from '../../common/PhoneFormat/PhoneFormat';
 import FormControl from '@material-ui/core/FormControl';
 import DoneIcon from '@material-ui/icons/Done';
 import { ActionButton } from '../../common/ActionButton/ActionButton';
@@ -120,8 +121,13 @@ const Component = ({className, post, changeHandler, submitForm}) => {
               label="Phone"
               variant="outlined"
               fullWidth
-              type='tel'
               margin='normal'
+              InputProps={{
+                inputComponent: PhoneFormat,
+              }}
+              inputProps={{
+                autoComplete: 'new-password',
+              }}
             />
             <TextField
               value={post.location}
@@ -134,6 +140,9 @@ const Component = ({className, post, changeHandler, submitForm}) => {
               rows={2}
               fullWidth
               margin='normal'
+              inputProps={{
+                autoComplete: 'new-password',
+              }}
             />
             <FormControl variant="outlined" margin='normal'>
               <Grid container spacing={2} alignItems='center'>

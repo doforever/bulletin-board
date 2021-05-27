@@ -7,7 +7,7 @@ import clsx from 'clsx';
 // import { reduxSelector, reduxActionCreator } from '../../../redux/exampleRedux.js';
 import NumberFormat from 'react-number-format';
 
-import styles from './NumberFormatCustom.module.scss';
+import styles from './PhoneFormat.module.scss';
 
 const Component = ({className, children, inputRef, name, onChange, ...other}) => (
   <NumberFormat
@@ -22,10 +22,11 @@ const Component = ({className, children, inputRef, name, onChange, ...other}) =>
         },
       });
     }}
-    thousandSeparator
-    isNumericString
-    prefix="$"
     allowNegative={false}
+    isNumericString
+    type='tel'
+    format='+## ### ### ###'
+    mask='_'
   />
 );
 
@@ -48,7 +49,7 @@ Component.propTypes = {
 // const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 export {
-  Component as NumberFormatCustom,
-  // Container as NumberFormatCustom,
-  Component as NumberFormatCustomComponent,
+  Component as PhoneFormat,
+  // Container as PhoneFormat,
+  Component as PhoneFormatComponent,
 };
