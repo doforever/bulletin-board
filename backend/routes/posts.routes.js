@@ -30,7 +30,8 @@ router.get('/posts/:id', async (req, res) => {
 });
 
 router.post('/posts', async (req, res) => {
-  const { author, title, text, photo, price, phone, location, status } = req.body;
+  const { author, title, text, price, phone, location, status } = req.fields;
+  const photo = req.files.file;
 
   // Title validation
   const isTitleValid = title && title.length > 10;
@@ -72,7 +73,8 @@ router.post('/posts', async (req, res) => {
 });
 
 router.put('/posts/:id', async (req, res) => {
-  const { title, text, photo, price, phone, location, status } = req.body;
+  const { title, text, price, phone, location, status } = req.fields;
+  const photo = req.files.file;
 
   // Title validation
   const isTitleValid = title && title.length > 10;
