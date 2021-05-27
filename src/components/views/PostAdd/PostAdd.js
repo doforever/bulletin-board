@@ -51,13 +51,9 @@ const Component = ({ user, savePost, postRequest}) => {
 
   const submitForm = () => {
     if (newPost.title && newPost.text && user && user.email) {
-      const date = new Date();
       const postData = {
         ...newPost,
         author: user.email,
-        created: date,
-        updated: date,
-        status: 'published',
       };
       savePost(postData);
     }

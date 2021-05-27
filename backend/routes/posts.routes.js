@@ -30,15 +30,42 @@ router.get('/posts/:id', async (req, res) => {
 });
 
 router.post('/posts', async (req, res) => {
-  const { author, created, updated, status, title, text, photo, price, phone, location } = req.body;
-  try {
-    const newPost = new Post({author, created, updated, status, title, text, photo, price, phone, location});
-    const saved = await newPost.save();
-    res.status(201).json(saved);
-  }
-  catch (err) {
-    console.log(err);
-    res.status(500).json({message: 'Post saving error'});
+  const { author, title, text, photo, price, phone, location } = req.body;
+
+  // Title validation
+  const isTitleValid = title && title.length > 10;
+
+  // Text validation
+  const isTextValid = text && text.length > 20;
+
+  // Email validation
+  const emailPattern = new RegExp(/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.([a-z]{1,6}))$/i);
+  const isEmailValid = emailPattern.test(author);
+
+  if ( isTitleValid && isTextValid && isEmailValid ) {
+    const date = new Date();
+    try {
+      const newPost = new Post({
+        author,
+        created: date,
+        updated: date,
+        status: 'published',
+        title,
+        text,
+        photo,
+        price,
+        phone,
+        location,
+      });
+      const saved = await newPost.save();
+      res.status(201).json(saved);
+    }
+    catch (err) {
+      console.log(err);
+      res.status(500).json({message: 'Post saving error'});
+    }
+  } else {
+    res.status(400).json({message: 'Bad request'});
   }
 });
 

@@ -56,7 +56,6 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
         ...post,
         ...editedPost,
         author: user.email,
-        updated: new Date(),
         status: 'published',
       };
       updatePost(postData);
