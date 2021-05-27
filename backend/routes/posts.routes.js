@@ -31,7 +31,10 @@ router.get('/posts/:id', async (req, res) => {
 
 router.post('/posts', async (req, res) => {
   const { author, title, text, price, phone, location, status } = req.fields;
-  const photo = req.files.file;
+  const photo = req.files.photo;
+
+  // Photo validation
+  const isPhotoValid = photo ? photo.size && photo.type.includes('image') : true;
 
   // Title validation
   const isTitleValid = title && title.length > 10;
@@ -46,7 +49,7 @@ router.post('/posts', async (req, res) => {
   // Status validation
   const isStatusValid = status && ['published', 'draft', 'closed'].includes(status);
 
-  if ( isTitleValid && isTextValid && isEmailValid && isStatusValid) {
+  if ( isTitleValid && isTextValid && isEmailValid && isStatusValid && isPhotoValid) {
     const date = new Date();
     try {
       const newPost = new Post({
@@ -56,7 +59,7 @@ router.post('/posts', async (req, res) => {
         status,
         title,
         text,
-        photo,
+        photo: photo ? photo.path.replace('public', '') : '',
         price,
         phone,
         location,
@@ -65,6 +68,7 @@ router.post('/posts', async (req, res) => {
       res.status(201).json(saved);
     }
     catch (err) {
+      console.error(err);
       res.status(500).json({message: 'Post saving error'});
     }
   } else {
@@ -74,7 +78,10 @@ router.post('/posts', async (req, res) => {
 
 router.put('/posts/:id', async (req, res) => {
   const { title, text, price, phone, location, status } = req.fields;
-  const photo = req.files.file;
+  const photo = req.files.photo;
+
+  // Phot validation
+  const isPhotoValid = photo ? photo.size && photo.type.includes('image') : true;
 
   // Title validation
   const isTitleValid = title && title.length > 10;
@@ -85,12 +92,21 @@ router.put('/posts/:id', async (req, res) => {
   // Status validation
   const isStatusValid = status && ['published', 'draft', 'closed'].includes(status);
 
-  if (isTitleValid && isTextValid && isStatusValid) {
+  if (isTitleValid && isTextValid && isStatusValid && isPhotoValid) {
     const date = new Date();
     try {
       const post = await Post.findById(req.params.id);
       if (post) {
-        Object.assign(post, { title, text, photo, price, phone, location, updated: date, status });
+        Object.assign(post, {
+          title,
+          text,
+          photo: photo ? photo.path.replace('public', '') : '',
+          price,
+          phone,
+          location,
+          updated: date,
+          status,
+        });
         const updatedPost = await post.save();
         res.json(updatedPost);
       }

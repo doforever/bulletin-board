@@ -10,7 +10,10 @@ const app = express();
 
 /* MIDDLEWARE */
 app.use(cors());
-app.use(formidable({ uploadDir: 'public/uploads'}));
+app.use(formidable({
+  uploadDir: 'public/uploads',
+  keepExtensions: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
