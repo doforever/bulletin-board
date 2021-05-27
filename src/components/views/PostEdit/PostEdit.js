@@ -51,12 +51,10 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
   };
 
   const submitForm = () => {
-    if (editedPost.title && editedPost.text && user && user.email) {
+    if (editedPost.title && editedPost.text) {
       const postData = {
         ...post,
         ...editedPost,
-        author: user.email,
-        status: 'published',
       };
       updatePost(postData);
     }

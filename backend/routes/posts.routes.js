@@ -61,11 +61,38 @@ router.post('/posts', async (req, res) => {
       res.status(201).json(saved);
     }
     catch (err) {
-      console.log(err);
       res.status(500).json({message: 'Post saving error'});
     }
   } else {
     res.status(400).json({message: 'Bad request'});
+  }
+});
+
+router.put('/posts/:id', async (req, res) => {
+  const { title, text, photo, price, phone, location } = req.body;
+
+  // Title validation
+  const isTitleValid = title && title.length > 10;
+
+  // Text validation
+  const isTextValid = text && text.length > 20;
+
+  if (isTitleValid && isTextValid) {
+    const date = new Date();
+    try {
+      const post = await Post.findById(req.params.id);
+      if (post) {
+        Object.assign(post, { title, text, photo, price, phone, location, updated: date });
+        const updatedPost = await post.save();
+        res.json(updatedPost);
+      }
+      else res.status(404).json({ message: 'Not found...' });
+    }
+    catch (err) {
+      res.status(500).json({ message: 'Post update error' });
+    }
+  } else {
+    res.status(400).json({ message: 'Bad request' });
   }
 });
 
