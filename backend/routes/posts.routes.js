@@ -16,7 +16,17 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage,
+  fileFilter: (req, file, callback) => {
+    if (!file.mimetype.includes('image')) {
+      return callback(new Error('Only images are allowed'));
+    }
+    callback(null, true);
+  },
+  limits: {
+    fileSize: 5000000,
+  },
+});
 
 router.get('/posts', async (req, res) => {
   try {
