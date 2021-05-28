@@ -1,10 +1,12 @@
 const express = require('express');
-const router = express.Router();
 const multer = require('multer');
 const uniqid = require('uniqid');
+
 const { isTitleValid, isEmailValid, isTextValid, isStatusValid, isPhotoValid } = require('../validation.js');
 
 const Post = require('../models/post.model');
+
+const router = express.Router();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -35,9 +37,12 @@ router.get('/posts', async (req, res) => {
       .select('author created title photo status')
       .sort({created: -1});
     if(!result) res.status(404).json({ post: 'Not found' });
-    else res.json(result);
+    else {
+      res.header('Cache-Control', 'max-age=1200').json(result);
+    }
   }
   catch(err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });
