@@ -24,6 +24,7 @@ const Component = ({className, children, inputRef, name, onChange, ...other}) =>
     }}
     thousandSeparator
     isNumericString
+    type='text'
     prefix="$"
     allowNegative={false}
   />

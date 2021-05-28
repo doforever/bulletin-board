@@ -1,7 +1,22 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const uniqid = require('uniqid');
+const { isTitleValid, isEmailValid, isTextValid, isStatusValid, isPhotoValid } = require('../validation.js');
 
 const Post = require('../models/post.model');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/uploads');
+  },
+  filename: (req, file, cb) => {
+    const ext = file.originalname.split('.').slice(-1);
+    cb(null, uniqid() + '.' + ext);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 router.get('/posts', async (req, res) => {
   try {
@@ -29,27 +44,15 @@ router.get('/posts/:id', async (req, res) => {
   }
 });
 
-router.post('/posts', async (req, res) => {
-  const { author, title, text, price, phone, location, status } = req.fields;
-  const photo = req.files.photo;
+router.post('/posts', upload.single('photo'), async (req, res) => {
+  const { author, title, text, price, phone, location, status } = req.body;
+  const photo = req.file;
 
-  // Photo validation
-  const isPhotoValid = photo ? photo.size && photo.type.includes('image') : true;
-
-  // Title validation
-  const isTitleValid = title && title.length > 10;
-
-  // Text validation
-  const isTextValid = text && text.length > 20;
-
-  // Email validation
-  const emailPattern = new RegExp(/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.([a-z]{1,6}))$/i);
-  const isEmailValid = emailPattern.test(author);
-
-  // Status validation
-  const isStatusValid = status && ['published', 'draft', 'closed'].includes(status);
-
-  if ( isTitleValid && isTextValid && isEmailValid && isStatusValid && isPhotoValid) {
+  if ( isTitleValid(title)
+    && isTextValid(text)
+    && isEmailValid(author)
+    && isStatusValid(status)
+    && isPhotoValid(photo) ) {
     const date = new Date();
     try {
       const newPost = new Post({
@@ -76,24 +79,11 @@ router.post('/posts', async (req, res) => {
   }
 });
 
-router.put('/posts/:id', async (req, res) => {
-  const { title, text, price, phone, location, status } = req.fields;
-  const photo = req.files.photo;
-  console.log(req.fields);
+router.put('/posts/:id', upload.single('photo'), async (req, res) => {
+  const { title, text, price, phone, location, status } = req.body;
+  const photo = req.file;
 
-  // Phot validation
-  const isPhotoValid = photo ? photo.size && photo.type.includes('image') : true;
-
-  // Title validation
-  const isTitleValid = title && title.length > 10;
-
-  // Text validation
-  const isTextValid = text && text.length > 20;
-
-  // Status validation
-  const isStatusValid = status && ['published', 'draft', 'closed'].includes(status);
-
-  if (isTitleValid && isTextValid && isStatusValid && isPhotoValid) {
+  if (isTitleValid(title) && isTextValid(text) && isStatusValid(status) && isPhotoValid(photo)) {
     const date = new Date();
     try {
       const post = await Post.findById(req.params.id);
@@ -102,7 +92,7 @@ router.put('/posts/:id', async (req, res) => {
           title,
           text,
           photo: photo ? photo.path.replace('public', '') : '',
-          price,
+          price: price === 'null' ? null : price,
           phone,
           location,
           updated: date,

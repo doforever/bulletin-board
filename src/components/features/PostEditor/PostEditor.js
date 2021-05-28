@@ -196,10 +196,10 @@ Component.propTypes = {
   post: PropTypes.shape({
     title: PropTypes.string,
     text: PropTypes.string,
-    price: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    price: PropTypes.string,
     phone: PropTypes.string,
     location: PropTypes.string,
-    photo: PropTypes.object,
+    photo: PropTypes.oneOfType(PropTypes.object, PropTypes.string),
   }),
   changeHandler: PropTypes.func,
   submitForm: PropTypes.func,
