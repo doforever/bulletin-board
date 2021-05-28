@@ -80,10 +80,12 @@ router.post('/posts', upload.single('photo'), async (req, res) => {
 });
 
 router.put('/posts/:id', upload.single('photo'), async (req, res) => {
-  const { title, text, price, phone, location, status } = req.body;
+  const { title, text, price, phone, location, status} = req.body;
+  let photoString = req.body.photo;
   const photo = req.file;
 
   if (isTitleValid(title) && isTextValid(text) && isStatusValid(status) && isPhotoValid(photo)) {
+    if (!photoString) photoString = photo ? photo.path.replace('public', '') : '';
     const date = new Date();
     try {
       const post = await Post.findById(req.params.id);
@@ -91,7 +93,7 @@ router.put('/posts/:id', upload.single('photo'), async (req, res) => {
         Object.assign(post, {
           title,
           text,
-          photo: photo ? photo.path.replace('public', '') : '',
+          photo: photoString,
           price: price === 'null' ? null : price,
           phone,
           location,

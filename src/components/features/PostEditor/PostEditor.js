@@ -199,7 +199,7 @@ Component.propTypes = {
     price: PropTypes.string,
     phone: PropTypes.string,
     location: PropTypes.string,
-    photo: PropTypes.oneOfType(PropTypes.object, PropTypes.string),
+    photo: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   }),
   changeHandler: PropTypes.func,
   submitForm: PropTypes.func,
