@@ -61,7 +61,13 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
         ...editedPost,
         status: 'published',
       };
-      updatePost(postData);
+      const formData = new FormData();
+      for (let [key, value] of Object.entries(postData)) {
+        if (key !== 'photo' || !!value) {
+          formData.append(key, value);
+        }
+      }
+      updatePost(formData);
     }
   };
 

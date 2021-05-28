@@ -60,7 +60,13 @@ const Component = ({ user, savePost, postRequest}) => {
         author: user.email,
         status: 'published',
       };
-      savePost(postData);
+      const formData = new FormData();
+      for (let [key, value] of Object.entries(postData)) {
+        if (key !== 'photo' || !!value) {
+          formData.append(key, value);
+        }
+      }
+      savePost(formData);
     }
   };
 

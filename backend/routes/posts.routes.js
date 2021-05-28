@@ -79,6 +79,7 @@ router.post('/posts', async (req, res) => {
 router.put('/posts/:id', async (req, res) => {
   const { title, text, price, phone, location, status } = req.fields;
   const photo = req.files.photo;
+  console.log(req.fields);
 
   // Phot validation
   const isPhotoValid = photo ? photo.size && photo.type.includes('image') : true;
@@ -113,6 +114,7 @@ router.put('/posts/:id', async (req, res) => {
       else res.status(404).json({ message: 'Not found...' });
     }
     catch (err) {
+      console.error(err);
       res.status(500).json({ message: 'Post update error' });
     }
   } else {

@@ -62,7 +62,7 @@ export const savePostRequest = postData => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      },);
+      });
       dispatch(postSaved(res.data));
     } catch (e) {
       dispatch(requestError(e.message || true));
@@ -78,7 +78,7 @@ export const updatePostRequest = (id, postData) => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      },);
+      });
       dispatch(postUpdated(res.data));
     } catch (e) {
       dispatch(requestError(e.message || true));
