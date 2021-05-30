@@ -19,9 +19,9 @@ const Component = ({ user, savePost, postRequest}) => {
     title: '',
     text: '',
     price: '',
-    tel: '',
-    address: '',
-    photo: '',
+    phone: '',
+    location: '',
+    photo: null,
   });
 
   const [isError, setIsError] = useState('false');
@@ -38,9 +38,9 @@ const Component = ({ user, savePost, postRequest}) => {
         title: '',
         text: '',
         price: '',
-        tel: '',
-        address: '',
-        photo: '',
+        phone: '',
+        location: '',
+        photo: null,
       });
     }
   }, [postRequest]);
@@ -49,17 +49,24 @@ const Component = ({ user, savePost, postRequest}) => {
     changeNewPost({ ...newPost, [e.target.name]: e.target.value });
   };
 
+  const photoChangeHandler = photo => {
+    changeNewPost({ ...newPost, photo });
+  };
+
   const submitForm = () => {
     if (newPost.title && newPost.text && user && user.email) {
-      const date = new Date();
       const postData = {
         ...newPost,
-        email: user.email,
-        published: date,
-        lastUpdate: date,
+        author: user.email,
         status: 'published',
       };
-      savePost(postData);
+      const formData = new FormData();
+      for (let [key, value] of Object.entries(postData)) {
+        if (key !== 'photo' || !!value) {
+          formData.append(key, value);
+        }
+      }
+      savePost(formData);
     }
   };
 
@@ -67,7 +74,12 @@ const Component = ({ user, savePost, postRequest}) => {
   else {
     return (
       <div>
-        <PostEditor post={newPost} changeHandler={changeHandler} submitForm={submitForm} />
+        <PostEditor
+          post={newPost}
+          changeHandler={changeHandler}
+          photoChangeHandler={photoChangeHandler}
+          submitForm={submitForm}
+        />
         <Snackbar
           open={isError}
           autoHideDuration={3000}

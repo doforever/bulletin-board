@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import { getAll, loadPostsRequest, getRequest } from '../../../redux/postsRedux.js';
+import { getAllPublished, fetchPublished, getRequest } from '../../../redux/postsRedux.js';
 import { getUser } from '../../../redux/userRedux.js';
 
 import { PostsList } from '../../features/PostsList/PostsList';
@@ -52,13 +52,13 @@ Component.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  posts: getAll(state),
+  posts: getAllPublished(state),
   user: getUser(state),
   postsRequest: getRequest(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  loadPosts: () => dispatch(loadPostsRequest()),
+  loadPosts: () => dispatch(fetchPublished()),
 });
 
 const Container = connect(mapStateToProps, mapDispatchToProps)(Component);

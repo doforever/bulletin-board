@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import { NumberFormatCustom } from '../../common/NumberFormatCustom/NumberFormatCustom';
+import { PhoneFormat } from '../../common/PhoneFormat/PhoneFormat';
 import FormControl from '@material-ui/core/FormControl';
 import DoneIcon from '@material-ui/icons/Done';
 import { ActionButton } from '../../common/ActionButton/ActionButton';
@@ -19,30 +20,36 @@ import Alert from '@material-ui/lab/Alert';
 
 import styles from './PostEditor.module.scss';
 
-const Component = ({className, post, changeHandler, submitForm}) => {
+const Component = ({className, post, changeHandler, photoChangeHandler, submitForm}) => {
   const [isFading, setIsFading] = useState(false);
   const [imgUrl, setImgUrl] = useState('');
-  const [imgName, setImgName] = useState('');
+  const [fileName, setFileName] = useState('');
   const [titleErrorMes, setTitleErrorMes] = useState('');
   const [textErrorMes, setTextErrorMes] = useState('');
   const [open, setOpen] = useState(false);
 
-  const setPhoto = e => {
-    changeHandler(e);
-    const photo = e.target.files[0];
-    if (photo) {
-      setImgName(photo.name);
-      setImgUrl(URL.createObjectURL(photo));
+  useEffect(() => {
+    if (post.photo) {
+      setImgUrl(post.photo instanceof File ? URL.createObjectURL(post.photo) : post.photo);
       setIsFading(true);
       setTimeout(() => { setIsFading(false); }, 1000);
+    } else {
+      setImgUrl('');
+      setFileName('');
+    }
+  }, [post.photo]);
+
+  const setPhoto = e => {
+    const photo = e.target.files[0];
+    if (photo) {
+      photoChangeHandler(photo);
+      setFileName(e.target.value);
     }
   };
 
   const saveHander = () => {
     if (post.title && post.text && !titleErrorMes && !textErrorMes) {
       submitForm();
-      setImgUrl('');
-      setImgName('');
     } else setOpen(true);
   };
 
@@ -68,7 +75,7 @@ const Component = ({className, post, changeHandler, submitForm}) => {
 
   return (
     <Grid className={clsx(className, styles.root)} container spacing={2} justify='center'>
-      <Grid item container xs={12} md={6} alignContent='stretch'>
+      <Grid item container xs={12} md={6} alignContent='stretch' justify='center'>
         <Paper className={styles.paper}>
           <form noValidate autoComplete='off' className={styles.form}>
             <TextField
@@ -113,33 +120,42 @@ const Component = ({className, post, changeHandler, submitForm}) => {
               }}
             />
             <TextField
-              value={post.tel}
+              value={post.phone}
               onChange={changeHandler}
-              name='tel'
-              id="tel"
-              label="Tel"
+              name='phone'
+              id="phone"
+              label="Phone"
               variant="outlined"
-              fullWidth type='tel'
+              fullWidth
               margin='normal'
+              InputProps={{
+                inputComponent: PhoneFormat,
+              }}
+              inputProps={{
+                autoComplete: 'new-password',
+              }}
             />
             <TextField
-              value={post.address}
+              value={post.location}
               onChange={changeHandler}
-              name='address'
-              id="address"
+              name='location'
+              id="location"
               label="Address"
               variant="outlined"
               multiline
               rows={2}
               fullWidth
               margin='normal'
+              inputProps={{
+                autoComplete: 'new-password',
+              }}
             />
             <FormControl variant="outlined" margin='normal'>
               <Grid container spacing={2} alignItems='center'>
                 <Grid item>
                   <Button htmlFor='photo' color='primary' variant='contained' component='label'>Add photo</Button>
                   <input
-                    value={post.photo}
+                    value={fileName}
                     onChange={setPhoto}
                     name='photo'
                     id="photo"
@@ -149,7 +165,7 @@ const Component = ({className, post, changeHandler, submitForm}) => {
                   />
                 </Grid>
                 <Grid item>
-                  <Typography>{imgName}</Typography>
+                  <Typography>{post.photo ? post.photo.name : ''}</Typography>
                 </Grid>
               </Grid>
             </FormControl>
@@ -159,7 +175,7 @@ const Component = ({className, post, changeHandler, submitForm}) => {
           </form>
         </Paper>
       </Grid>
-      {imgUrl && <Grid item container xs={12} md={6} alignContent='stretch'>
+      {imgUrl && <Grid item container xs={12} md={6} alignContent='stretch' justify='center'>
         <Paper className={styles.paper}>
           <img src={imgUrl} alt='thumbnail' className={clsx(styles.photo, isFading && styles.fadeIn)} />
         </Paper>
@@ -180,16 +196,14 @@ Component.propTypes = {
   post: PropTypes.shape({
     title: PropTypes.string,
     text: PropTypes.string,
-    price: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    tel: PropTypes.string,
-    address: PropTypes.string,
-    photo: PropTypes.string,
+    price: PropTypes.string,
+    phone: PropTypes.string,
+    location: PropTypes.string,
+    photo: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   }),
-  imgName: PropTypes.string,
-  imgUrl: PropTypes.string,
   changeHandler: PropTypes.func,
   submitForm: PropTypes.func,
-  setPhoto: PropTypes.func,
+  photoChangeHandler: PropTypes.func,
 };
 
 // const mapStateToProps = state => ({

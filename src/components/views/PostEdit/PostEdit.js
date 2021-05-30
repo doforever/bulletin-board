@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
 import { getUser } from '../../../redux/userRedux.js';
-import { getOneForId, loadOneRequest, getRequest, updatePostRequest } from '../../../redux/postsRedux.js';
+import { getCurrent, loadOneRequest, getRequest, updatePostRequest } from '../../../redux/postsRedux.js';
 
 import { NotFound } from '../NotFound/NotFound';
 import { PostEditor } from '../../features/PostEditor/PostEditor';
@@ -20,9 +20,9 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
     title: '',
     text: '',
     price: '',
-    tel: '',
-    address: '',
-    photo: '',
+    phone: '',
+    location: '',
+    photo: null,
   });
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
   }, []);
 
   useEffect(() => {
-    changeEditedPost({ ...editedPost, ...post, photo: '' });
+    changeEditedPost({ ...editedPost, ...post});
   }, [post]);
 
   useEffect(() => {
@@ -50,20 +50,28 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
     changeEditedPost({ ...editedPost, [e.target.name]: e.target.value });
   };
 
+  const photoChangeHandler = photo => {
+    changeEditedPost({ ...editedPost, photo });
+  };
+
   const submitForm = () => {
-    if (editedPost.title && editedPost.text && user && user.email) {
+    if (editedPost.title && editedPost.text) {
       const postData = {
         ...post,
         ...editedPost,
-        email: user.email,
-        lastUpdate: new Date(),
         status: 'published',
       };
-      updatePost(postData);
+      const formData = new FormData();
+      for (let [key, value] of Object.entries(postData)) {
+        if (key !== 'photo' || !!value) {
+          formData.append(key, value);
+        }
+      }
+      updatePost(formData);
     }
   };
 
-  const canEdit = user && post && (user.type === 'admin' || user.email === post.email);
+  const canEdit = user && post && (user.type === 'admin' || user.email === post.author);
 
   if (postRequest.active && postRequest.type === 'LOAD_POST') return <div className={styles.root}><LinearProgress /></div>;
   else if (postRequest.error && postRequest.type === 'LOAD_POST') return <div className={styles.root}>< Alert severity="error" >Loading error</Alert ></div>;
@@ -71,7 +79,12 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
   else {
     return (
       <div>
-        <PostEditor post={editedPost} changeHandler={changeHandler} submitForm={submitForm} />
+        <PostEditor
+          post={editedPost}
+          changeHandler={changeHandler}
+          photoChangeHandler={photoChangeHandler}
+          submitForm={submitForm}
+        />
         <Snackbar
           open={isError}
           autoHideDuration={3000}
@@ -100,7 +113,7 @@ Component.propTypes = {
 
 const mapStateToProps = (state, props) => ({
   user: getUser(state),
-  post: getOneForId(state, props.match.params.id),
+  post: getCurrent(state, props.match.params.id),
   postRequest: getRequest(state),
 });
 

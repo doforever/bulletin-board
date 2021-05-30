@@ -19,10 +19,15 @@ const Component = ({className, user, login, logout}) => {
   const Nav = user ? UserNav : AnonimNav;
 
   const selectUser = ({target}) => {
-    if (target.value) {
+    if (target.value === 'regUser') {
       login({
-        email: 'joanna.doe@gmail.com',
-        type: target.value,
+        email: 'user123@example.com',
+        type: 'regUser',
+      });
+    } else if (target.value === 'admin') {
+      login({
+        email: 'the.admin@example.com',
+        type: 'admin',
       });
     } else logout();
   };
