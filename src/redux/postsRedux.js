@@ -30,7 +30,15 @@ export const postUpdated = payload => ({ payload, type: UPDATE_POST });
 
 /* thunk creators */
 export const fetchPublished = () => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
+    const { posts: { lastFetch, data, request } } = getState();
+    const timeDiff = Date.now() - lastFetch;
+    const isFresh =  timeDiff < 10 * 60 * 1000; // less than 10 min
+    if ((data.length > 0 && isFresh)
+      || (request.type === 'LOAD_POSTS' && request.active)) {
+      return;
+    }
+
     dispatch(startRequest('LOAD_POSTS'));
     try {
       let res = await axios.get(`${API_URL}/api/posts`);
@@ -104,6 +112,7 @@ export const reducer = (statePart = [], action = {}) => {
       const posts = action.payload.map(({_id, ...other}) => ({id: _id, ...other}));
       return {
         ...statePart,
+        lastFetch: Date.now(),
         request: {
           ...statePart.request,
           active: false,

@@ -23,7 +23,7 @@ const Component = ({className, children, posts}) =>
 } else {
   return (
     <Grid container spacing={2} className={clsx(className, styles.root)}>
-      { posts.sort((p1, p2) => Date.parse(p1.published) - Date.parse(p2.published)).map(({ id, title, photo}) => (
+      { posts.sort((p1, p2) => Date.parse(p2.created) - Date.parse(p1.created)).map(({ id, title, photo}) => (
         <Grid item key={id} xs={12} sm={6} md={4} xl={3}>
           <Card className={styles.item}>
             <CardMedia

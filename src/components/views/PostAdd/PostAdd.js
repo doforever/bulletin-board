@@ -24,7 +24,7 @@ const Component = ({ user, savePost, postRequest}) => {
     photo: null,
   });
 
-  const [isError, setIsError] = useState('false');
+  const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
