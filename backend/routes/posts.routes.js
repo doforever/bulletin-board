@@ -38,7 +38,7 @@ router.get('/posts', async (req, res) => {
       .sort({created: -1});
     if(!result) res.status(404).json({ post: 'Not found' });
     else {
-      res.header('Cache-Control', 'max-age=1200').json(result);
+      res.json(result);
     }
   }
   catch(err) {
