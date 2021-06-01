@@ -12,25 +12,27 @@ import { UserNav } from '../../features/UserNav/UserNav';
 import { AnonimNav } from '../../features/AnonimNav/AnonimNav';
 import Link from '@material-ui/core/Link';
 import { Link as RouterLink } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 
 import styles from './Header.module.scss';
 
-const Component = ({className, user, login, logout}) => {
-  const Nav = user ? UserNav : AnonimNav;
+const Component = ({className}) => {
+  const { user, isAuthenticated, isLoading } = useAuth0();
+  const Nav = isAuthenticated && !isLoading ? UserNav : AnonimNav;
 
-  const selectUser = ({target}) => {
-    if (target.value === 'regUser') {
-      login({
-        email: 'user123@example.com',
-        type: 'regUser',
-      });
-    } else if (target.value === 'admin') {
-      login({
-        email: 'the.admin@example.com',
-        type: 'admin',
-      });
-    } else logout();
-  };
+  // const selectUser = ({target}) => {
+  //   if (target.value === 'regUser') {
+  //     login({
+  //       email: 'user123@example.com',
+  //       type: 'regUser',
+  //     });
+  //   } else if (target.value === 'admin') {
+  //     login({
+  //       email: 'the.admin@example.com',
+  //       type: 'admin',
+  //     });
+  //   } else logout();
+  // };
 
   return (
     <div className={clsx(className, styles.root)}>
@@ -47,14 +49,6 @@ const Component = ({className, user, login, logout}) => {
             Bulletin Board
           </Link>
           <Nav className={styles.nav}/>
-          <select
-            value={user ? user.type : ''}
-            onChange={selectUser}
-          >
-            <option value=''>No user</option>
-            <option value='regUser'>user</option>
-            <option value='admin'>admin</option>
-          </select>
         </Toolbar>
       </AppBar>
       <Toolbar />
@@ -64,24 +58,21 @@ const Component = ({className, user, login, logout}) => {
 
 Component.propTypes = {
   className: PropTypes.string,
-  user: PropTypes.object,
-  login: PropTypes.func,
-  logout: PropTypes.func,
 };
 
-const mapStateToProps = state => ({
-  user: getUser(state),
-});
+// const mapStateToProps = state => ({
+//   user: getUser(state),
+// });
 
-const mapDispatchToProps = dispatch => ({
-  login: arg => dispatch(login(arg)),
-  logout: () => dispatch(logout()),
-});
+// const mapDispatchToProps = dispatch => ({
+//   login: arg => dispatch(login(arg)),
+//   logout: () => dispatch(logout()),
+// });
 
-const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
+// const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 export {
-  // Component as Header,
-  Container as Header,
+  Component as Header,
+  // Container as Header,
   Component as HeaderComponent,
 };

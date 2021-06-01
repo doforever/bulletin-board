@@ -3,10 +3,28 @@ const multer = require('multer');
 const uniqid = require('uniqid');
 const ObjectId = require('mongoose').Types.ObjectId;
 const { imagesURL } = require('../config');
+const jwt = require('express-jwt');
+const jwks = require('jwks-rsa');
+const jwtAuthz = require('express-jwt-authz');
 
 const Post = require('../models/post.model');
 
 const router = express.Router();
+
+const jwtCheck = jwt({
+  secret: jwks.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: 'https://dev-ms59jlua.eu.auth0.com/.well-known/jwks.json',
+  }),
+  audience: 'http://localhost:8000',
+  issuer: [`https://dev-ms59jlua.eu.auth0.com/`],
+  algorithms: ['RS256'],
+  // credentialsRequired: false,
+});
+
+const checkScopes = jwtAuthz(['update:post']);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -62,9 +80,10 @@ router.get('/posts/:id', async (req, res) => {
   }
 });
 
-router.post('/posts', upload.single('photo'), async (req, res) => {
+router.post('/posts', jwtCheck, upload.single('photo'), async (req, res) => {
   const { author, title, text, price, phone, location, status } = req.body;
   const photo = req.file;
+  console.log(req.user);
 
   const date = new Date();
   try {
@@ -89,7 +108,7 @@ router.post('/posts', upload.single('photo'), async (req, res) => {
   }
 });
 
-router.put('/posts/:id', upload.single('photo'), async (req, res) => {
+router.put('/posts/:id', jwtCheck, checkScopes, upload.single('photo'), async (req, res) => {
   const { title, text, price, phone, location, status} = req.body;
   let photoString = req.body.photo;
   const photo = req.file;

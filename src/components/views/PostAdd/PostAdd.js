@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useAuth0 } from '@auth0/auth0-react';
+import { AUTH0_URL, API_URL } from '../../../config';
 
 import { connect } from 'react-redux';
-import { getUser } from '../../../redux/userRedux.js';
 import { savePostRequest, getRequest } from '../../../redux/postsRedux.js';
 
 import { NotFound } from '../NotFound/NotFound';
@@ -12,7 +13,7 @@ import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
 import { Link as RouterLink } from 'react-router-dom';
 
-const Component = ({ user, savePost, postRequest}) => {
+const Component = ({ savePost, postRequest}) => {
   const [newPost, changeNewPost] = useState({
     title: '',
     text: '',
@@ -24,6 +25,8 @@ const Component = ({ user, savePost, postRequest}) => {
 
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
+  const [accessToken, setAccessToken] = useState('');
 
   useEffect(() => {
     if (postRequest.error && postRequest.type === 'SAVE_POST') {
@@ -51,8 +54,27 @@ const Component = ({ user, savePost, postRequest}) => {
     changeNewPost({ ...newPost, photo });
   };
 
-  const submitForm = () => {
-    if (newPost.title && newPost.text && user && user.email) {
+  useEffect(() => {
+    const getUserMetadata = async () => {
+      const domain = 'dev-ms59jlua.eu.auth0.com';
+
+      try {
+        const accessToken = await getAccessTokenSilently({
+          audience: `http://localhost:8000`,
+          scope: 'create:post',
+        });
+        setAccessToken(accessToken);
+
+      } catch (e) {
+        console.log(e.message);
+      }
+    };
+
+    getUserMetadata();
+  }, []);
+
+  const submitForm = async () => {
+    if (newPost.title && newPost.text && !isLoading && isAuthenticated && user.email) {
       const postData = {
         ...newPost,
         author: user.email,
@@ -64,11 +86,11 @@ const Component = ({ user, savePost, postRequest}) => {
           formData.append(key, value);
         }
       }
-      savePost(formData);
+      savePost(formData, accessToken);
     }
   };
 
-  if (!user) return <NotFound />;
+  if (!isAuthenticated) return <NotFound />;
   else {
     return (
       <div>
@@ -112,16 +134,16 @@ const Component = ({ user, savePost, postRequest}) => {
 };
 
 Component.propTypes = {
-  user: PropTypes.object,
+  postRequest: PropTypes.object,
+  savePost: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
-  user: getUser(state),
   postRequest: getRequest(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  savePost: post => dispatch(savePostRequest(post)),
+  savePost: (post, accessToken) => dispatch(savePostRequest(post, accessToken)),
 });
 
 const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
