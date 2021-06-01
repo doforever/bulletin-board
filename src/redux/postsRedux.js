@@ -82,13 +82,14 @@ export const savePostRequest = (postData, accessToken) => {
   };
 };
 
-export const updatePostRequest = (id, postData) => {
+export const updatePostRequest = (id, postData, accessToken) => {
   return async dispatch => {
     dispatch(startRequest('UPDATE_POST'));
     try {
       const res = await axios.put(`${API_URL}/posts/${id}`, postData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${accessToken}`,
         },
       });
       dispatch(postUpdated(res.data));

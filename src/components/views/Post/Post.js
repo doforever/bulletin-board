@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useAuth0 } from '@auth0/auth0-react';
 
 import clsx from 'clsx';
 
@@ -27,7 +28,7 @@ import { Link as RouterLink } from 'react-router-dom';
 
 import styles from './Post.module.scss';
 
-const Component = ({className, children, post, user, postRequest, loadPost, deletePost}) => {
+const Component = ({className, children, post, postRequest, loadPost, deletePost}) => {
   const [editOpen, setEditOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -39,12 +40,13 @@ const Component = ({className, children, post, user, postRequest, loadPost, dele
     deletePost();
     setDialogOpen(false);
   };
+  const { user, isAuthenticated, isLoading } = useAuth0();
 
   if (postRequest.active) return <div className={styles.root}><LinearProgress /></div>;
   else if (postRequest.error) return <div className={styles.root}>< Alert severity="error" >Loading error</Alert ></div>;
   else if (!post) return <NotFound/>;
   else {
-    const canEdit = user ? user.type === 'admin' || user.email === post.author : false;
+    const canEdit = !isLoading && isAuthenticated && (user.type === 'admin' || user.email === post.author);
 
     const image = post.photo
       ? (<Grid item xs={12} md={6}>
@@ -149,7 +151,6 @@ Component.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   post: PropTypes.object,
-  user: PropTypes.object,
   postRequest: PropTypes.object.isRequired,
   loadPost: PropTypes.func,
   deletePost: PropTypes.func,
@@ -157,7 +158,6 @@ Component.propTypes = {
 
 const mapStateToProps = (state, props) => ({
   post: getCurrent(state, props.match.params.id),
-  user: getUser(state),
   postRequest: getRequest(state),
 });
 
