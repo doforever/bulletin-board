@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useAuth0 } from '@auth0/auth0-react';
-import { AUTH0_URL, API_URL } from '../../../config';
+import { API_URL } from '../../../config';
 
 import { connect } from 'react-redux';
 import { savePostRequest, getRequest } from '../../../redux/postsRedux.js';
@@ -26,7 +26,6 @@ const Component = ({ savePost, postRequest}) => {
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
-  const [accessToken, setAccessToken] = useState('');
 
   useEffect(() => {
     if (postRequest.error && postRequest.type === 'SAVE_POST') {
@@ -54,25 +53,6 @@ const Component = ({ savePost, postRequest}) => {
     changeNewPost({ ...newPost, photo });
   };
 
-  useEffect(() => {
-    const getUserMetadata = async () => {
-      const domain = 'dev-ms59jlua.eu.auth0.com';
-
-      try {
-        const accessToken = await getAccessTokenSilently({
-          audience: `http://localhost:8000`,
-          scope: 'create:post',
-        });
-        setAccessToken(accessToken);
-
-      } catch (e) {
-        console.log(e.message);
-      }
-    };
-
-    getUserMetadata();
-  }, []);
-
   const submitForm = async () => {
     if (newPost.title && newPost.text && !isLoading && isAuthenticated && user.email) {
       const postData = {
@@ -86,7 +66,15 @@ const Component = ({ savePost, postRequest}) => {
           formData.append(key, value);
         }
       }
-      savePost(formData, accessToken);
+      try {
+        const accessToken = await getAccessTokenSilently({
+          audience: `${API_URL}`,
+          scope: 'create:post',
+        });
+        savePost(formData, accessToken);
+      } catch (e) {
+        console.log(e.message);
+      }
     }
   };
 
