@@ -64,7 +64,6 @@ export const loadOneRequest = id => {
 
 export const savePostRequest = (postData, accessToken) => {
   return async dispatch => {
-    console.log(accessToken);
     dispatch(startRequest('SAVE_POST'));
     try {
       const res = await axios.post(`${API_URL}/api/posts`, postData, {
