@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
@@ -14,21 +14,30 @@ import { NotFound } from '../NotFound/NotFound';
 import Link from '@material-ui/core/Link';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { ActionButton } from '../../common/ActionButton/ActionButton';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Alert from '@material-ui/lab/Alert';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import Button from '@material-ui/core/Button';
 import { Link as RouterLink } from 'react-router-dom';
 
 import styles from './Post.module.scss';
 
 const Component = ({className, children, post, user, postRequest, loadPost}) => {
-  const [editOpen, setEditOpen] = React.useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     loadPost();
   }, []);
+
+  const handleDelete = () => {
+    setDialogOpen(true);
+  };
 
   if (postRequest.active) return <div className={styles.root}><LinearProgress /></div>;
   else if (postRequest.error) return <div className={styles.root}>< Alert severity="error" >Loading error</Alert ></div>;
@@ -107,12 +116,31 @@ const Component = ({className, children, post, user, postRequest, loadPost}) => 
             tooltipTitle='Edit'
           />
           <SpeedDialAction
-            // component={RouterLink}
-            // to={`/post/${post.id}/delete`}
+            onClick={handleDelete}
             icon={<DeleteIcon />}
             tooltipTitle='Delete'
           />
         </SpeedDial> }
+        <Dialog
+          open={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete this post permanently?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setDialogOpen(false)} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={() => {console.log('Confirm delete'); setDialogOpen(false);}} color="primary" autoFocus>
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }
