@@ -1,6 +1,7 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { Router, Switch, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { createBrowserHistory } from 'history';
 
 import { createMuiTheme, StylesProvider, ThemeProvider } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core';
@@ -15,6 +16,8 @@ import { PostAdd } from './components/views/PostAdd/PostAdd';
 import { NotFound } from './components/views/NotFound/NotFound';
 import { MyPosts } from './components/views/MyPosts/MyPosts';
 
+export const history = createBrowserHistory();
+
 const theme = createMuiTheme({
   palette: {
     primary: { main: '#2B4C6F' },
@@ -23,7 +26,7 @@ const theme = createMuiTheme({
 
 const App = () => (
   <Provider store={store}>
-    <BrowserRouter>
+    <Router history={history}>
       <StylesProvider injectFirst>
         <ThemeProvider theme={theme}>
           <CssBaseline />
@@ -39,7 +42,7 @@ const App = () => (
           </MainLayout>
         </ThemeProvider>
       </StylesProvider>
-    </BrowserRouter>
+    </Router>
   </Provider>
 );
 

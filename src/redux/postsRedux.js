@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_URL } from '../config.js';
+import { history } from '../App.js';
 
 /* selectors */
 export const getAll = ({posts}) => posts.data;
@@ -102,6 +103,7 @@ export const deletePostRequest = id => {
     try {
       const res = await axios.delete(`${API_URL}/api/posts/${id}`);
       dispatch(postDeleted(res.data._id));
+      history.push('/');
 
     } catch (e) {
       dispatch(requestError(e.message || true));
