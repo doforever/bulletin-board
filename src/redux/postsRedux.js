@@ -101,8 +101,8 @@ export const deletePostRequest = id => {
     dispatch(startRequest('DELETE_POST'));
     try {
       const res = await axios.delete(`${API_URL}/api/posts/${id}`);
-      console.log('Delete response ', res.data._id);
       dispatch(postDeleted(res.data._id));
+
     } catch (e) {
       dispatch(requestError(e.message || true));
     }
@@ -202,6 +202,7 @@ export const reducer = (statePart = [], action = {}) => {
           success: true,
         },
         data: statePart.data.filter(post => post.id !== action.payload),
+        current: null,
       };
     }
     default:

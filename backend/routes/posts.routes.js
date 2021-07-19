@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const uniqid = require('uniqid');
+var ObjectId = require('mongoose').Types.ObjectId;
 
 const { isTitleValid, isEmailValid, isTextValid, isStatusValid, isPhotoValid } = require('../validation.js');
 
@@ -36,7 +37,7 @@ router.get('/posts', async (req, res) => {
       .find({status: 'published'})
       .select('author created title photo status')
       .sort({created: -1});
-    if(!result) res.status(404).json({ post: 'Not found' });
+    if(!result) res.status(404).json({ message: 'Not found' });
     else {
       res.json(result);
     }
@@ -49,12 +50,15 @@ router.get('/posts', async (req, res) => {
 
 router.get('/posts/:id', async (req, res) => {
   try {
-    const result = await Post
-      .findById(req.params.id);
-    if(!result) res.status(404).json({ post: 'Not found' });
-    else res.json(result);
+    if (!ObjectId.isValid(req.params.id)) res.status(404).json({ message: 'Not found' });
+    else {
+      const result = await Post.findById(req.params.id);
+      if(!result) res.status(404).json({ message: 'Not found' });
+      else res.json(result);
+    }
   }
   catch(err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });
