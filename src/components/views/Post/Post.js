@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import { getCurrent, loadOneRequest, getRequest  } from '../../../redux/postsRedux.js';
+import { getCurrent, loadOneRequest, getRequest, deletePostRequest } from '../../../redux/postsRedux.js';
 import { getUser } from '../../../redux/userRedux.js';
 
 import Grid from '@material-ui/core/Grid';
@@ -27,7 +27,7 @@ import { Link as RouterLink } from 'react-router-dom';
 
 import styles from './Post.module.scss';
 
-const Component = ({className, children, post, user, postRequest, loadPost}) => {
+const Component = ({className, children, post, user, postRequest, loadPost, deletePost}) => {
   const [editOpen, setEditOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -36,7 +36,8 @@ const Component = ({className, children, post, user, postRequest, loadPost}) => 
   }, []);
 
   const handleDelete = () => {
-    setDialogOpen(true);
+    deletePost();
+    setDialogOpen(false);
   };
 
   if (postRequest.active) return <div className={styles.root}><LinearProgress /></div>;
@@ -116,7 +117,7 @@ const Component = ({className, children, post, user, postRequest, loadPost}) => 
             tooltipTitle='Edit'
           />
           <SpeedDialAction
-            onClick={handleDelete}
+            onClick={() => setDialogOpen(true)}
             icon={<DeleteIcon />}
             tooltipTitle='Delete'
           />
@@ -124,8 +125,6 @@ const Component = ({className, children, post, user, postRequest, loadPost}) => 
         <Dialog
           open={dialogOpen}
           onClose={() => setDialogOpen(false)}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
         >
           <DialogContent>
             <DialogContentText>
@@ -136,7 +135,7 @@ const Component = ({className, children, post, user, postRequest, loadPost}) => 
             <Button onClick={() => setDialogOpen(false)} color="primary">
               Cancel
             </Button>
-            <Button onClick={() => {console.log('Confirm delete'); setDialogOpen(false);}} color="primary" autoFocus>
+            <Button onClick={handleDelete} color="primary" autoFocus>
               Delete
             </Button>
           </DialogActions>
@@ -153,6 +152,7 @@ Component.propTypes = {
   user: PropTypes.object,
   postRequest: PropTypes.object.isRequired,
   loadPost: PropTypes.func,
+  deletePost: PropTypes.func,
 };
 
 const mapStateToProps = (state, props) => ({
@@ -163,6 +163,7 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = (dispatch, props) => ({
   loadPost: () => dispatch(loadOneRequest(props.match.params.id)),
+  deletePost: () => dispatch(deletePostRequest(props.match.params.id)),
 });
 
 const Container = connect(mapStateToProps, mapDispatchToProps)(Component);

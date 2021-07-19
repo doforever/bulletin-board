@@ -19,6 +19,7 @@ const FETCH_POST_SUCCESS = createActionName('FETCH_POST_SUCCESS');
 const REQUEST_ERROR = createActionName('REQUEST_ERROR');
 const SAVE_POST = createActionName('SAVE_POST');
 const UPDATE_POST = createActionName('UPDATE_POST');
+const DELETE_POST = createActionName('DELETE_POST');
 
 /* action creators */
 export const startRequest = payload => ({ payload, type: START_REQUEST });
@@ -27,6 +28,7 @@ export const fetchPostSuccess = payload => ({ payload, type: FETCH_POST_SUCCESS 
 export const requestError = payload => ({ payload, type: REQUEST_ERROR });
 export const postSaved = payload => ({ payload, type: SAVE_POST });
 export const postUpdated = payload => ({ payload, type: UPDATE_POST });
+export const postDeleted = payload => ({ payload, type: DELETE_POST });
 
 /* thunk creators */
 export const fetchPublished = () => {
@@ -88,6 +90,19 @@ export const updatePostRequest = (id, postData) => {
         },
       });
       dispatch(postUpdated(res.data));
+    } catch (e) {
+      dispatch(requestError(e.message || true));
+    }
+  };
+};
+
+export const deletePostRequest = id => {
+  return async dispatch => {
+    dispatch(startRequest('DELETE_POST'));
+    try {
+      const res = await axios.delete(`${API_URL}/api/posts/${id}`);
+      console.log('Delete response ', res.data._id);
+      dispatch(postDeleted(res.data._id));
     } catch (e) {
       dispatch(requestError(e.message || true));
     }
@@ -175,6 +190,18 @@ export const reducer = (statePart = [], action = {}) => {
           success: true,
         },
         data: posts,
+      };
+    }
+    case DELETE_POST: {
+      return {
+        ...statePart,
+        request: {
+          ...statePart.request,
+          active: false,
+          error: false,
+          success: true,
+        },
+        data: statePart.data.filter(post => post.id !== action.payload),
       };
     }
     default:
