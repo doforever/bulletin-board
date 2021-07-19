@@ -13,13 +13,19 @@ import Typography from '@material-ui/core/Typography';
 import { NotFound } from '../NotFound/NotFound';
 import Link from '@material-ui/core/Link';
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { ActionButton } from '../../common/ActionButton/ActionButton';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Alert from '@material-ui/lab/Alert';
+import SpeedDial from '@material-ui/lab/SpeedDial';
+import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
+import { Link as RouterLink } from 'react-router-dom';
 
 import styles from './Post.module.scss';
 
 const Component = ({className, children, post, user, postRequest, loadPost}) => {
+  const [editOpen, setEditOpen] = React.useState(false);
+
   useEffect(() => {
     loadPost();
   }, []);
@@ -84,9 +90,29 @@ const Component = ({className, children, post, user, postRequest, loadPost}) => 
           </Grid>
           {children}
         </Grid>
-        { canEdit && <ActionButton label='edit' to={`/post/${post.id}/edit`}>
-          <EditIcon />
-        </ActionButton> }
+        { canEdit && <SpeedDial
+          ariaLabel='edit'
+          icon={<EditIcon />}
+          onClose={() => setEditOpen(false)}
+          onOpen={() => setEditOpen(true)}
+          open={editOpen}
+          direction='up'
+          className={styles.fab}
+          FabProps={{color: 'secondary'}}
+        >
+          <SpeedDialAction
+            component={RouterLink}
+            to = {`/post/${post.id}/edit`}
+            icon={<EditIcon/>}
+            tooltipTitle='Edit'
+          />
+          <SpeedDialAction
+            // component={RouterLink}
+            // to={`/post/${post.id}/delete`}
+            icon={<DeleteIcon />}
+            tooltipTitle='Delete'
+          />
+        </SpeedDial> }
       </div>
     );
   }
