@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-import { getCurrent, loadOneRequest, getRequest  } from '../../../redux/postsRedux.js';
+import { getCurrent, loadOneRequest, getRequest, deletePostRequest } from '../../../redux/postsRedux.js';
 import { getUser } from '../../../redux/userRedux.js';
 
 import Grid from '@material-ui/core/Grid';
@@ -13,16 +13,32 @@ import Typography from '@material-ui/core/Typography';
 import { NotFound } from '../NotFound/NotFound';
 import Link from '@material-ui/core/Link';
 import EditIcon from '@material-ui/icons/Edit';
-import { ActionButton } from '../../common/ActionButton/ActionButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Alert from '@material-ui/lab/Alert';
+import SpeedDial from '@material-ui/lab/SpeedDial';
+import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import Button from '@material-ui/core/Button';
+import { Link as RouterLink } from 'react-router-dom';
 
 import styles from './Post.module.scss';
 
-const Component = ({className, children, post, user, postRequest, loadPost}) => {
+const Component = ({className, children, post, user, postRequest, loadPost, deletePost}) => {
+  const [editOpen, setEditOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   useEffect(() => {
     loadPost();
   }, []);
+
+  const handleDelete = () => {
+    deletePost();
+    setDialogOpen(false);
+  };
 
   if (postRequest.active) return <div className={styles.root}><LinearProgress /></div>;
   else if (postRequest.error) return <div className={styles.root}>< Alert severity="error" >Loading error</Alert ></div>;
@@ -84,9 +100,46 @@ const Component = ({className, children, post, user, postRequest, loadPost}) => 
           </Grid>
           {children}
         </Grid>
-        { canEdit && <ActionButton label='edit' to={`/post/${post.id}/edit`}>
-          <EditIcon />
-        </ActionButton> }
+        { canEdit && <SpeedDial
+          ariaLabel='edit'
+          icon={<EditIcon />}
+          onClose={() => setEditOpen(false)}
+          onOpen={() => setEditOpen(true)}
+          open={editOpen}
+          direction='up'
+          className={styles.fab}
+          FabProps={{color: 'secondary'}}
+        >
+          <SpeedDialAction
+            component={RouterLink}
+            to = {`/post/${post.id}/edit`}
+            icon={<EditIcon/>}
+            tooltipTitle='Edit'
+          />
+          <SpeedDialAction
+            onClick={() => setDialogOpen(true)}
+            icon={<DeleteIcon />}
+            tooltipTitle='Delete'
+          />
+        </SpeedDial> }
+        <Dialog
+          open={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+        >
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete this post permanently?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setDialogOpen(false)} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleDelete} color="primary" autoFocus>
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }
@@ -99,6 +152,7 @@ Component.propTypes = {
   user: PropTypes.object,
   postRequest: PropTypes.object.isRequired,
   loadPost: PropTypes.func,
+  deletePost: PropTypes.func,
 };
 
 const mapStateToProps = (state, props) => ({
@@ -109,6 +163,7 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = (dispatch, props) => ({
   loadPost: () => dispatch(loadOneRequest(props.match.params.id)),
+  deletePost: () => dispatch(deletePostRequest(props.match.params.id)),
 });
 
 const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
