@@ -129,4 +129,20 @@ router.put('/posts/:id', upload.single('photo'), async (req, res) => {
   }
 });
 
+router.delete('/posts/:id', async (req,res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (post) {
+      const removedPost = await post.remove();
+      res.json(removedPost);
+    } else {
+      res.status(404).json({ message: 'Not found...' });
+    }
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'Remove cart error' });
+  }
+});
+
 module.exports = router;
