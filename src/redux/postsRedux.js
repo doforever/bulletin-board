@@ -91,6 +91,7 @@ export const updatePostRequest = (id, postData) => {
         },
       });
       dispatch(postUpdated(res.data));
+      setTimeout(() => {history.push(`/post/${id}`);}, 2000);
     } catch (e) {
       dispatch(requestError(e.message || true));
     }
