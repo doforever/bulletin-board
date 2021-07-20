@@ -11,7 +11,7 @@ const router = express.Router();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'public/uploads');
+    cb(null, '../public/uploads/');
   },
   filename: (req, file, cb) => {
     const ext = file.originalname.split('.').slice(-1);
@@ -66,6 +66,7 @@ router.get('/posts/:id', async (req, res) => {
 router.post('/posts', upload.single('photo'), async (req, res) => {
   const { author, title, text, price, phone, location, status } = req.body;
   const photo = req.file;
+  console.log(isTextValid(text));
 
   if ( isTitleValid(title)
     && isTextValid(text)
