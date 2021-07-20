@@ -96,11 +96,11 @@ const Component = ({ user, savePost, postRequest}) => {
             action={
               <Button
                 component={RouterLink}
-                to='/'
+                to='/my_posts'
                 color='inherit'
                 size='small'
               >
-                VIEW All
+                VIEW YOUR POSTS
               </Button>
             }
           >

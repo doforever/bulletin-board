@@ -104,7 +104,7 @@ export const deletePostRequest = id => {
     try {
       const res = await axios.delete(`${API_URL}/api/posts/${id}`);
       dispatch(postDeleted(res.data._id));
-      history.push('/');
+      history.goBack();
 
     } catch (e) {
       dispatch(requestError(e.message || true));
