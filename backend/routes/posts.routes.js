@@ -3,8 +3,6 @@ const multer = require('multer');
 const uniqid = require('uniqid');
 var ObjectId = require('mongoose').Types.ObjectId;
 
-const { isTitleValid, isEmailValid, isTextValid, isStatusValid, isPhotoValid } = require('../validation.js');
-
 const Post = require('../models/post.model');
 
 const router = express.Router();
@@ -66,36 +64,27 @@ router.get('/posts/:id', async (req, res) => {
 router.post('/posts', upload.single('photo'), async (req, res) => {
   const { author, title, text, price, phone, location, status } = req.body;
   const photo = req.file;
-  console.log(isTextValid(text));
 
-  if ( isTitleValid(title)
-    && isTextValid(text)
-    && isEmailValid(author)
-    && isStatusValid(status)
-    && isPhotoValid(photo) ) {
-    const date = new Date();
-    try {
-      const newPost = new Post({
-        author,
-        created: date,
-        updated: date,
-        status,
-        title,
-        text,
-        photo: photo ? photo.path.replace('public', '') : '',
-        price,
-        phone,
-        location,
-      });
-      const saved = await newPost.save();
-      res.status(201).json(saved);
-    }
-    catch (err) {
-      console.error(err);
-      res.status(500).json({message: 'Post saving error'});
-    }
-  } else {
-    res.status(400).json({message: 'Bad request'});
+  const date = new Date();
+  try {
+    const newPost = new Post({
+      author,
+      created: date,
+      updated: date,
+      status,
+      title,
+      text,
+      photo: photo ? photo.path.replace('public', '') : '',
+      price,
+      phone,
+      location,
+    });
+    const saved = await newPost.save();
+    res.status(201).json(saved);
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).json({message: 'Post saving error'});
   }
 });
 

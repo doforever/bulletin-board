@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 
-// import { connect } from 'react-redux';
-// import { reduxSelector, reduxActionCreator } from '../../../redux/exampleRedux.js';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import { NumberFormatCustom } from '../../common/NumberFormatCustom/NumberFormatCustom';
@@ -24,8 +22,6 @@ const Component = ({className, post, changeHandler, photoChangeHandler, submitFo
   const [isFading, setIsFading] = useState(false);
   const [imgUrl, setImgUrl] = useState('');
   const [fileName, setFileName] = useState('');
-  const [titleErrorMes, setTitleErrorMes] = useState('');
-  const [textErrorMes, setTextErrorMes] = useState('');
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -48,29 +44,9 @@ const Component = ({className, post, changeHandler, photoChangeHandler, submitFo
   };
 
   const saveHander = () => {
-    if (post.title && post.text && !titleErrorMes && !textErrorMes) {
+    if (post.title && post.text ) {
       submitForm();
     } else setOpen(true);
-  };
-
-  const titleValidator = title => {
-    if (title && title.length < 10) setTitleErrorMes('Too short');
-    else setTitleErrorMes('');
-  };
-
-  const textValidator = text => {
-    if (text && text.length < 20) setTextErrorMes('Too short');
-    else setTextErrorMes('');
-  };
-
-  const titleChangeHandler = e => {
-    titleValidator(e.target.value);
-    changeHandler(e);
-  };
-
-  const textChangeHandler = e => {
-    textValidator(e.target.value);
-    changeHandler(e);
   };
 
   return (
@@ -80,31 +56,29 @@ const Component = ({className, post, changeHandler, photoChangeHandler, submitFo
           <form noValidate autoComplete='off' className={styles.form}>
             <TextField
               value={post.title}
-              onChange={titleChangeHandler}
+              onChange={changeHandler}
               name='title'
               id="title"
               label="Title"
               variant="outlined"
               fullWidth
               margin='normal'
-              error={!!titleErrorMes}
-              helperText={titleErrorMes}
               required
+              inputProps={{ maxLength: 25 }}
             />
             <TextField
               value={post.text}
-              onChange={textChangeHandler}
+              onChange={changeHandler}
               name='text'
               id="text"
               label="Text"
               variant="outlined"
               multiline
-              rows={3}
+              rowsMax={5}
               fullWidth
               margin='normal'
-              error={!!textErrorMes}
-              helperText={textErrorMes}
               required
+              inputProps={{ maxLength: 2000 }}
             />
             <TextField
               value={post.price}
@@ -143,11 +117,12 @@ const Component = ({className, post, changeHandler, photoChangeHandler, submitFo
               label="Address"
               variant="outlined"
               multiline
-              rows={2}
+              rowsMax={3}
               fullWidth
               margin='normal'
               inputProps={{
                 autoComplete: 'new-password',
+                maxLength: 60,
               }}
             />
             <FormControl variant="outlined" margin='normal'>
@@ -185,7 +160,7 @@ const Component = ({className, post, changeHandler, photoChangeHandler, submitFo
         autoHideDuration={3000}
         onClose={() => setOpen(false)}
       >
-        <Alert severity="warning" variant='outlined'>Some fields are missing or incorrect</Alert>
+        <Alert severity="warning" variant='outlined'>Some fields are missing</Alert>
       </Snackbar>
     </Grid>
   );
