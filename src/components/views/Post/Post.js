@@ -88,7 +88,7 @@ const Component = ({className, children, post, user, postRequest, loadPost, dele
                   <Typography variant='h6' component='h2'> Contact author</Typography>
                   <Typography component='address'>
                     <Link href={`mailto:${post.author}`}>{post.author}</Link><br/>
-                    {post.phone && `phone: ${post.phone}`}<br/>
+                    {post.phone && `phone: +${post.phone}`}<br/>
                   </Typography>
                 </Grid>
               </Grid>
@@ -96,7 +96,7 @@ const Component = ({className, children, post, user, postRequest, loadPost, dele
           </Grid>
           <Grid item xs={12}>
             Published: {new Date(post.created).toLocaleDateString()} <br/>
-          Last update: {new Date(post.updated).toLocaleDateString()}
+            Last update: {new Date(post.updated).toLocaleDateString()}
           </Grid>
           {children}
         </Grid>
