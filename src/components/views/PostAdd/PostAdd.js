@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-// import clsx from 'clsx';
-
 import { connect } from 'react-redux';
 import { getUser } from '../../../redux/userRedux.js';
 import { savePostRequest, getRequest } from '../../../redux/postsRedux.js';
@@ -11,8 +9,8 @@ import { NotFound } from '../NotFound/NotFound';
 import { PostEditor } from '../../features/PostEditor/PostEditor';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
-
-// import styles from './PostAdd.module.scss';
+import Button from '@material-ui/core/Button';
+import { Link as RouterLink } from 'react-router-dom';
 
 const Component = ({ user, savePost, postRequest}) => {
   const [newPost, changeNewPost] = useState({
@@ -89,10 +87,25 @@ const Component = ({ user, savePost, postRequest}) => {
         </Snackbar>
         <Snackbar
           open={isSuccess}
-          autoHideDuration={3000}
+          autoHideDuration={4000}
           onClose={() => setIsSuccess(false)}
         >
-          <Alert severity="success" variant='outlined'>Post saved!</Alert>
+          <Alert
+            severity='success'
+            variant='outlined'
+            action={
+              <Button
+                component={RouterLink}
+                to='/my_posts'
+                color='inherit'
+                size='small'
+              >
+                VIEW YOUR POSTS
+              </Button>
+            }
+          >
+            Post saved!
+          </Alert>
         </Snackbar>
       </div>
     );}

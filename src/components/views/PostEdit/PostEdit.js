@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-// import clsx from 'clsx';
-
 import { connect } from 'react-redux';
 import { getUser } from '../../../redux/userRedux.js';
 import { getCurrent, loadOneRequest, getRequest, updatePostRequest } from '../../../redux/postsRedux.js';
