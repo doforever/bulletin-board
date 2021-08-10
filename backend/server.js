@@ -24,6 +24,9 @@ app.use('/api', (req, res) => {
   res.status(404).send({ post: 'Not found...' });
 });
 
+/* SERVE PUBLIC DIRECTORY */
+app.use(express.static(path.join(__dirname, '../public')));
+
 /* REACT WEBSITE */
 app.use(express.static(path.join(__dirname, '../build')));
 app.use('*', (req, res) => {
