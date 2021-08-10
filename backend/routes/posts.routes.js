@@ -1,23 +1,30 @@
 const express = require('express');
 const multer = require('multer');
-const uniqid = require('uniqid');
-var ObjectId = require('mongoose').Types.ObjectId;
+// const uniqid = require('uniqid');
+const ObjectId = require('mongoose').Types.ObjectId;
+const multerGoogleStorage = require('multer-cloud-storage');
 
 const Post = require('../models/post.model');
 
 const router = express.Router();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, '../public/uploads/');
-  },
-  filename: (req, file, cb) => {
-    const ext = file.originalname.split('.').slice(-1);
-    cb(null, uniqid() + '.' + ext);
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, '../public/uploads/');
+//   },
+//   filename: (req, file, cb) => {
+//     const ext = file.originalname.split('.').slice(-1);
+//     cb(null, uniqid() + '.' + ext);
+//   },
+// });
 
-const upload = multer({ storage: storage,
+const upload = multer({
+  storage: multerGoogleStorage.storageEngine({
+    bucket: 'bulletin_board_uploads',
+    projectId: 'bulletinboard-315320',
+    keyFilename: '../bulletinboard-315320-e58537582787.json',
+    acl: undefined,
+  }),
   fileFilter: (req, file, callback) => {
     if (!file.mimetype.includes('image')) {
       return callback(new Error('Only images are allowed'));
