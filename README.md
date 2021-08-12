@@ -2,6 +2,11 @@
 Bulletin board app created with React, Redux and Material UI framework.\
 Backend in Node.js and MongoDB with Mongoose.
 
+## Deployed on Heroku
+https://still-stream-70087.herokuapp.com/ \
+Uses Heroku ephemeral filesystem for uploads - that means that any changes to the filesystem whilst the dyno is running only last until that dyno is shut down or restarted. \
+On every server restart database is populated with example posts.
+
 ## Run project locally
 1. `yarn install`
 2. run local mongo db with `mongod`
