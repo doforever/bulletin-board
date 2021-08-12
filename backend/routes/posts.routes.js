@@ -1,7 +1,8 @@
 const express = require('express');
 const multer = require('multer');
 const uniqid = require('uniqid');
-var ObjectId = require('mongoose').Types.ObjectId;
+const ObjectId = require('mongoose').Types.ObjectId;
+const { imagesURL } = require('../config');
 
 const Post = require('../models/post.model');
 
@@ -9,7 +10,7 @@ const router = express.Router();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, '../public/uploads/');
+    cb(null, '../images/uploads/');
   },
   filename: (req, file, cb) => {
     const ext = file.originalname.split('.').slice(-1);
@@ -74,7 +75,7 @@ router.post('/posts', upload.single('photo'), async (req, res) => {
       status,
       title,
       text,
-      photo: photo ? photo.path.replace('../public', '') : '',
+      photo: photo ? photo.path.replace('../images', imagesURL) : '',
       price,
       phone,
       location,
@@ -93,7 +94,7 @@ router.put('/posts/:id', upload.single('photo'), async (req, res) => {
   let photoString = req.body.photo;
   const photo = req.file;
 
-  if (!photoString) photoString = photo ? photo.path.replace('../public', '') : '';
+  if (!photoString) photoString = photo ? photo.path.replace('../images', imagesURL) : '';
   const date = new Date();
   try {
     const post = await Post.findById(req.params.id);
