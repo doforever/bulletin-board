@@ -2,9 +2,6 @@
 Bulletin board app created with React, Redux and Material UI framework.\
 Backend in Node.js and MongoDB with Mongoose.
 
-## Deployed on Heroku
-https://still-stream-70087.herokuapp.com/
-
 ## Run project locally
 1. `yarn install`
 2. run local mongo db with `mongod`
