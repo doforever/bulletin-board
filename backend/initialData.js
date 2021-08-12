@@ -89,12 +89,10 @@ const loadInitialData = async () => {
   };
 
   try {
-    let counter = await Post.countDocuments();
-    if (counter === 0) {
-      console.log('No posts. Loading example data...');
-      await Post.create(multiplyData(data, 3));
-      console.log('Test data has been successfully loaded');
-    }
+    await Post.deleteMany();
+    console.log('DB cleared. Loading example data...');
+    await Post.create(multiplyData(data, 3));
+    console.log('Test data has been successfully loaded');
   } catch (err) {
     console.log(`Couldn't load test data`, err);
   }
