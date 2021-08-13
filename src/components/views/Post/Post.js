@@ -39,15 +39,17 @@ const Component = ({className, children, post, postRequest, loadPost, deletePost
   const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
 
   const handleDelete = async () => {
-    try {
-      const accessToken = await getAccessTokenSilently({
-        audience: `${audience}`,
-        scope: 'delete:post',
-      });
-      deletePost(accessToken);
-      setDialogOpen(false);
-    } catch (e) {
-      console.log(e.message);
+    if ([post.author, process.env.admin].includes(user.email)){
+      try {
+        const accessToken = await getAccessTokenSilently({
+          audience: `${audience}`,
+          scope: 'delete:post',
+        });
+        deletePost(accessToken);
+        setDialogOpen(false);
+      } catch (e) {
+        console.log(e.message);
+      }
     }
   };
 

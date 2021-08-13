@@ -108,7 +108,7 @@ export const deletePostRequest = (id, accessToken) => {
         headers: { 'Authorization': `Bearer ${accessToken}` },
       });
       dispatch(postDeleted(res.data._id));
-      history.goBack();
+      history.push('/');
 
     } catch (e) {
       dispatch(requestError(e.message || true));

@@ -55,7 +55,7 @@ const Component = ({ post, loadPost, postRequest, updatePost }) => {
   };
 
   const submitForm = async () => {
-    if (editedPost.title && editedPost.text) {
+    if (editedPost.title && editedPost.text && [post.author, process.env.admin].includes(user.email)) {
       const postData = {
         ...post,
         ...editedPost,
