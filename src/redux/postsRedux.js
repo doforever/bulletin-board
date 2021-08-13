@@ -100,11 +100,13 @@ export const updatePostRequest = (id, postData, accessToken) => {
   };
 };
 
-export const deletePostRequest = id => {
+export const deletePostRequest = (id, accessToken) => {
   return async dispatch => {
     dispatch(startRequest('DELETE_POST'));
     try {
-      const res = await axios.delete(`${API_URL}/posts/${id}`);
+      const res = await axios.delete(`${API_URL}/posts/${id}`, {
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+      });
       dispatch(postDeleted(res.data._id));
       history.goBack();
 

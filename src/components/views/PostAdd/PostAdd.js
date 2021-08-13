@@ -71,7 +71,6 @@ const Component = ({ savePost, postRequest}) => {
           audience: `${audience}`,
           scope: 'create:post',
         });
-        console.log('access token', accessToken);
         savePost(formData, accessToken);
       } catch (e) {
         console.log(e.message);

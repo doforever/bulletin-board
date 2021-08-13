@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAuth0 } from '@auth0/auth0-react';
+import { audience } from '../../../config';
 
 import clsx from 'clsx';
 
@@ -35,12 +36,20 @@ const Component = ({className, children, post, postRequest, loadPost, deletePost
     loadPost();
   }, []);
 
-  const handleDelete = () => {
-    deletePost();
-    setDialogOpen(false);
-  };
+  const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
 
-  const { user, isAuthenticated, isLoading } = useAuth0();
+  const handleDelete = async () => {
+    try {
+      const accessToken = await getAccessTokenSilently({
+        audience: `${audience}`,
+        scope: 'delete:post',
+      });
+      deletePost(accessToken);
+      setDialogOpen(false);
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
 
   if (postRequest.active) return <div className={styles.root}><LinearProgress /></div>;
   else if (postRequest.error) return <div className={styles.root}>< Alert severity="error" >Loading error</Alert ></div>;
@@ -163,7 +172,7 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = (dispatch, props) => ({
   loadPost: () => dispatch(loadOneRequest(props.match.params.id)),
-  deletePost: () => dispatch(deletePostRequest(props.match.params.id)),
+  deletePost: accessToken => dispatch(deletePostRequest(props.match.params.id, accessToken)),
 });
 
 const Container = connect(mapStateToProps, mapDispatchToProps)(Component);

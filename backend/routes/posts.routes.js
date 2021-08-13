@@ -24,7 +24,8 @@ const jwtCheck = jwt({
   // credentialsRequired: false,
 });
 
-const checkScopes = jwtAuthz(['update:post']);
+const checkUpdate = jwtAuthz(['update:post']);
+const checkDelete = jwtAuthz(['delete:post']);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -83,7 +84,6 @@ router.get('/posts/:id', async (req, res) => {
 router.post('/posts', jwtCheck, upload.single('photo'), async (req, res) => {
   const { author, title, text, price, phone, location, status } = req.body;
   const photo = req.file;
-  console.log('user: ', req.user);
 
   const date = new Date();
   try {
@@ -108,7 +108,7 @@ router.post('/posts', jwtCheck, upload.single('photo'), async (req, res) => {
   }
 });
 
-router.put('/posts/:id', jwtCheck, checkScopes, upload.single('photo'), async (req, res) => {
+router.put('/posts/:id', jwtCheck, checkUpdate, upload.single('photo'), async (req, res) => {
   const { title, text, price, phone, location, status} = req.body;
   let photoString = req.body.photo;
   const photo = req.file;
@@ -139,7 +139,7 @@ router.put('/posts/:id', jwtCheck, checkScopes, upload.single('photo'), async (r
   }
 });
 
-router.delete('/posts/:id', async (req,res) => {
+router.delete('/posts/:id', jwtCheck, checkDelete, async (req,res) => {
   try {
     const post = await Post.findById(req.params.id);
     if (post) {
