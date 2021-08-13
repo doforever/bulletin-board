@@ -79,7 +79,7 @@ const Component = ({ post, loadPost, postRequest, updatePost }) => {
     }
   };
 
-  const canEdit = !isLoading && isAuthenticated && post && (user.type === 'admin' || user.email === post.author);
+  const canEdit = !isLoading && isAuthenticated && post && [post.author, process.env.admin].includes(user.email);
 
   if (postRequest.active && postRequest.type === 'LOAD_POST') return <div className={styles.root}><LinearProgress /></div>;
   else if (postRequest.error && postRequest.type === 'LOAD_POST') return <div className={styles.root}>< Alert severity="error" >Loading error</Alert ></div>;

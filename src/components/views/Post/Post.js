@@ -55,7 +55,7 @@ const Component = ({className, children, post, postRequest, loadPost, deletePost
   else if (postRequest.error) return <div className={styles.root}>< Alert severity="error" >Loading error</Alert ></div>;
   else if (!post) return <NotFound/>;
   else {
-    const canEdit = !isLoading && isAuthenticated && (user.type === 'admin' || user.email === post.author);
+    const canEdit = !isLoading && isAuthenticated && [post.author, process.env.admin].includes(user.email);
 
     const image = post.photo
       ? (<Grid item xs={12} md={6}>
