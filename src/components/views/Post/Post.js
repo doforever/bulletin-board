@@ -6,7 +6,6 @@ import clsx from 'clsx';
 
 import { connect } from 'react-redux';
 import { getCurrent, loadOneRequest, getRequest, deletePostRequest } from '../../../redux/postsRedux.js';
-import { getUser } from '../../../redux/userRedux.js';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -40,6 +39,7 @@ const Component = ({className, children, post, postRequest, loadPost, deletePost
     deletePost();
     setDialogOpen(false);
   };
+
   const { user, isAuthenticated, isLoading } = useAuth0();
 
   if (postRequest.active) return <div className={styles.root}><LinearProgress /></div>;

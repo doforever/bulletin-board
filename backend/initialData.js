@@ -92,9 +92,9 @@ const loadInitialData = async () => {
     await Post.deleteMany();
     console.log('DB cleared. Loading example data...');
     await Post.create(multiplyData(data, 3));
-    console.log('Test data has been successfully loaded');
+    console.log('Initial data has been successfully loaded');
   } catch (err) {
-    console.log(`Couldn't load test data`, err);
+    console.log(`Couldn't load initial data`, err);
   }
 
 };

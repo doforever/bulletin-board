@@ -83,7 +83,7 @@ router.get('/posts/:id', async (req, res) => {
 router.post('/posts', jwtCheck, upload.single('photo'), async (req, res) => {
   const { author, title, text, price, phone, location, status } = req.body;
   const photo = req.file;
-  console.log(req.user);
+  console.log('user: ', req.user);
 
   const date = new Date();
   try {

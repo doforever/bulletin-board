@@ -6,7 +6,6 @@ import clsx from 'clsx';
 
 import { connect } from 'react-redux';
 import { getAllPublished, fetchPublished, getRequest } from '../../../redux/postsRedux.js';
-import { getUser } from '../../../redux/userRedux.js';
 
 import { PostsList } from '../../features/PostsList/PostsList';
 import Grid from '@material-ui/core/Grid';
@@ -22,7 +21,7 @@ const Component = ({className, children, posts, loadPosts, postsRequest}) => {
     loadPosts();
   }, []);
 
-  const { user, isAuthenticated, isLoading } = useAuth0();
+  const { isAuthenticated, isLoading } = useAuth0();
 
   const userActions = isAuthenticated && !isLoading
     ? (

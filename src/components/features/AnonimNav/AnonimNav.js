@@ -13,7 +13,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import styles from './AnonimNav.module.scss';
 
-const Component = ({ className, children }) => {
+const Component = ({ className }) => {
   const { loginWithRedirect } = useAuth0();
 
   return (
@@ -26,7 +26,6 @@ const Component = ({ className, children }) => {
 };
 
 Component.propTypes = {
-  children: PropTypes.node,
   className: PropTypes.string,
 };
 

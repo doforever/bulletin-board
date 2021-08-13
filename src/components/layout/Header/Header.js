@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 
-import { connect } from 'react-redux';
-import { getUser, login, logout } from '../../../redux/userRedux.js';
+// import { connect } from 'react-redux';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -17,22 +16,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 import styles from './Header.module.scss';
 
 const Component = ({className}) => {
-  const { user, isAuthenticated, isLoading } = useAuth0();
+  const { isAuthenticated, isLoading } = useAuth0();
   const Nav = isAuthenticated && !isLoading ? UserNav : AnonimNav;
-
-  // const selectUser = ({target}) => {
-  //   if (target.value === 'regUser') {
-  //     login({
-  //       email: 'user123@example.com',
-  //       type: 'regUser',
-  //     });
-  //   } else if (target.value === 'admin') {
-  //     login({
-  //       email: 'the.admin@example.com',
-  //       type: 'admin',
-  //     });
-  //   } else logout();
-  // };
 
   return (
     <div className={clsx(className, styles.root)}>

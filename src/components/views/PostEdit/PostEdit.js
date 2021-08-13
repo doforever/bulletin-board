@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useAuth0 } from '@auth0/auth0-react';
-import { API_URL } from '../../../config';
+import { audience } from '../../../config';
 
 import { connect } from 'react-redux';
 import { getCurrent, loadOneRequest, getRequest, updatePostRequest } from '../../../redux/postsRedux.js';
@@ -69,7 +69,7 @@ const Component = ({ post, loadPost, postRequest, updatePost }) => {
       }
       try {
         const accessToken = await getAccessTokenSilently({
-          audience: `${API_URL}`,
+          audience: `${audience}`,
           scope: 'update:post',
         });
         updatePost(formData, accessToken);

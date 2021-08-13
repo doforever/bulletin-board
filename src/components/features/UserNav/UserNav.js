@@ -14,7 +14,7 @@ import { NavLink } from 'react-router-dom';
 
 import styles from './UserNav.module.scss';
 
-const Component = ({className, children}) => {
+const Component = ({className}) => {
   const { logout } = useAuth0();
 
   return (
@@ -30,7 +30,6 @@ const Component = ({className, children}) => {
 };
 
 Component.propTypes = {
-  children: PropTypes.node,
   className: PropTypes.string,
 };
 
