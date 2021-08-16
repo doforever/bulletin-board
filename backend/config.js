@@ -4,4 +4,6 @@ const dbURI = process.env.NODE_ENV === 'production'
 
 const imagesURL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8000';
 
-module.exports = {dbURI, imagesURL};
+const audience = process.env.NODE_ENV === 'production' ? 'https://still-stream-70087.herokuapp.com/' : 'http://localhost:8000';
+
+module.exports = {dbURI, imagesURL, audience};

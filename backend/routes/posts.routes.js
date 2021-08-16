@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const uniqid = require('uniqid');
 const ObjectId = require('mongoose').Types.ObjectId;
-const { imagesURL } = require('../config');
+const { imagesURL, audience } = require('../config');
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
 const jwtAuthz = require('express-jwt-authz');
@@ -18,7 +18,7 @@ const jwtCheck = jwt({
     jwksRequestsPerMinute: 5,
     jwksUri: 'https://dev-ms59jlua.eu.auth0.com/.well-known/jwks.json',
   }),
-  audience: 'http://localhost:8000',
+  audience: audience,
   issuer: [`https://dev-ms59jlua.eu.auth0.com/`],
   algorithms: ['RS256'],
   // credentialsRequired: false,
