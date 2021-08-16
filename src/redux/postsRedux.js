@@ -65,13 +65,14 @@ export const loadOneRequest = id => {
   };
 };
 
-export const savePostRequest = postData => {
+export const savePostRequest = (postData, accessToken) => {
   return async dispatch => {
     dispatch(startRequest('SAVE_POST'));
     try {
       const res = await axios.post(`${API_URL}/posts`, postData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${accessToken}`,
         },
       });
       dispatch(postSaved(res.data));
@@ -81,13 +82,14 @@ export const savePostRequest = postData => {
   };
 };
 
-export const updatePostRequest = (id, postData) => {
+export const updatePostRequest = (id, postData, accessToken) => {
   return async dispatch => {
     dispatch(startRequest('UPDATE_POST'));
     try {
       const res = await axios.put(`${API_URL}/posts/${id}`, postData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${accessToken}`,
         },
       });
       dispatch(postUpdated(res.data));
@@ -98,13 +100,15 @@ export const updatePostRequest = (id, postData) => {
   };
 };
 
-export const deletePostRequest = id => {
+export const deletePostRequest = (id, accessToken) => {
   return async dispatch => {
     dispatch(startRequest('DELETE_POST'));
     try {
-      const res = await axios.delete(`${API_URL}/posts/${id}`);
+      const res = await axios.delete(`${API_URL}/posts/${id}`, {
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+      });
       dispatch(postDeleted(res.data._id));
-      history.goBack();
+      history.push('/');
 
     } catch (e) {
       dispatch(requestError(e.message || true));

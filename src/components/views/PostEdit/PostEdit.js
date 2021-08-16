@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useAuth0 } from '@auth0/auth0-react';
+import { audience } from '../../../config';
 
 import { connect } from 'react-redux';
-import { getUser } from '../../../redux/userRedux.js';
 import { getCurrent, loadOneRequest, getRequest, updatePostRequest } from '../../../redux/postsRedux.js';
 
 import { NotFound } from '../NotFound/NotFound';
@@ -13,7 +14,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 
 import styles from './PostEdit.module.scss';
 
-const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
+const Component = ({ post, loadPost, postRequest, updatePost }) => {
   const [editedPost, changeEditedPost] = useState({
     title: '',
     text: '',
@@ -43,6 +44,7 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
 
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
 
   const changeHandler = e => {
     changeEditedPost({ ...editedPost, [e.target.name]: e.target.value });
@@ -52,8 +54,8 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
     changeEditedPost({ ...editedPost, photo });
   };
 
-  const submitForm = () => {
-    if (editedPost.title && editedPost.text) {
+  const submitForm = async () => {
+    if (editedPost.title && editedPost.text && [post.author, process.env.admin].includes(user.email)) {
       const postData = {
         ...post,
         ...editedPost,
@@ -65,11 +67,19 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
           formData.append(key, value);
         }
       }
-      updatePost(formData);
+      try {
+        const accessToken = await getAccessTokenSilently({
+          audience: `${audience}`,
+          scope: 'update:post',
+        });
+        updatePost(formData, accessToken);
+      } catch (e) {
+        console.log(e.message);
+      }
     }
   };
 
-  const canEdit = user && post && (user.type === 'admin' || user.email === post.author);
+  const canEdit = !isLoading && isAuthenticated && post && [post.author, process.env.admin].includes(user.email);
 
   if (postRequest.active && postRequest.type === 'LOAD_POST') return <div className={styles.root}><LinearProgress /></div>;
   else if (postRequest.error && postRequest.type === 'LOAD_POST') return <div className={styles.root}>< Alert severity="error" >Loading error</Alert ></div>;
@@ -103,21 +113,19 @@ const Component = ({ user, post, loadPost, postRequest, updatePost }) => {
 };
 
 Component.propTypes = {
-  user: PropTypes.object,
   post: PropTypes.object,
   postRequest: PropTypes.object.isRequired,
   loadPost: PropTypes.func,
 };
 
 const mapStateToProps = (state, props) => ({
-  user: getUser(state),
   post: getCurrent(state, props.match.params.id),
   postRequest: getRequest(state),
 });
 
 const mapDispatchToProps = (dispatch, props) => ({
   loadPost: () => dispatch(loadOneRequest(props.match.params.id)),
-  updatePost: postData => dispatch(updatePostRequest(props.match.params.id, postData)),
+  updatePost: (postData, accessToken) => dispatch(updatePostRequest(props.match.params.id, postData, accessToken)),
 });
 
 const Container = connect(mapStateToProps, mapDispatchToProps)(Component);

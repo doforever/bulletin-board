@@ -3,10 +3,29 @@ const multer = require('multer');
 const uniqid = require('uniqid');
 const ObjectId = require('mongoose').Types.ObjectId;
 const { imagesURL } = require('../config');
+const jwt = require('express-jwt');
+const jwks = require('jwks-rsa');
+const jwtAuthz = require('express-jwt-authz');
 
 const Post = require('../models/post.model');
 
 const router = express.Router();
+
+const jwtCheck = jwt({
+  secret: jwks.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: 'https://dev-ms59jlua.eu.auth0.com/.well-known/jwks.json',
+  }),
+  audience: 'http://localhost:8000',
+  issuer: [`https://dev-ms59jlua.eu.auth0.com/`],
+  algorithms: ['RS256'],
+  // credentialsRequired: false,
+});
+
+const checkUpdate = jwtAuthz(['update:post']);
+const checkDelete = jwtAuthz(['delete:post']);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -62,7 +81,7 @@ router.get('/posts/:id', async (req, res) => {
   }
 });
 
-router.post('/posts', upload.single('photo'), async (req, res) => {
+router.post('/posts', jwtCheck, upload.single('photo'), async (req, res) => {
   const { author, title, text, price, phone, location, status } = req.body;
   const photo = req.file;
 
@@ -89,7 +108,7 @@ router.post('/posts', upload.single('photo'), async (req, res) => {
   }
 });
 
-router.put('/posts/:id', upload.single('photo'), async (req, res) => {
+router.put('/posts/:id', jwtCheck, checkUpdate, upload.single('photo'), async (req, res) => {
   const { title, text, price, phone, location, status} = req.body;
   let photoString = req.body.photo;
   const photo = req.file;
@@ -120,7 +139,7 @@ router.put('/posts/:id', upload.single('photo'), async (req, res) => {
   }
 });
 
-router.delete('/posts/:id', async (req,res) => {
+router.delete('/posts/:id', jwtCheck, checkDelete, async (req,res) => {
   try {
     const post = await Post.findById(req.params.id);
     if (post) {

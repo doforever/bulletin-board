@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useAuth0 } from '@auth0/auth0-react';
 
 import clsx from 'clsx';
 
@@ -13,19 +14,22 @@ import { NavLink } from 'react-router-dom';
 
 import styles from './UserNav.module.scss';
 
-const Component = ({className, children}) => (
-  <List component="nav" className={clsx(className, styles.root)}>
-    <ListItem button component={NavLink} to={`/my_posts`} activeClassName={styles.active}>
-      <ListItemText primary="My posts" primaryTypographyProps={{noWrap: true}}/>
-    </ListItem>
-    <ListItem button component='a' href='https://google.com'>
-      <ListItemText primary="Logout"/>
-    </ListItem>
-  </List>
-);
+const Component = ({className}) => {
+  const { logout } = useAuth0();
+
+  return (
+    <List component="nav" className={clsx(className, styles.root)}>
+      <ListItem button component={NavLink} to={`/my_posts`} activeClassName={styles.active}>
+        <ListItemText primary="My posts" primaryTypographyProps={{noWrap: true}}/>
+      </ListItem>
+      <ListItem button component='a' onClick={() => logout({ returnTo: window.location.origin })}>
+        <ListItemText primary="Logout"/>
+      </ListItem>
+    </List>
+  );
+};
 
 Component.propTypes = {
-  children: PropTypes.node,
   className: PropTypes.string,
 };
 

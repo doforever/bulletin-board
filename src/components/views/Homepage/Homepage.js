@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useAuth0 } from '@auth0/auth0-react';
 
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
 import { getAllPublished, fetchPublished, getRequest } from '../../../redux/postsRedux.js';
-import { getUser } from '../../../redux/userRedux.js';
 
 import { PostsList } from '../../features/PostsList/PostsList';
 import Grid from '@material-ui/core/Grid';
@@ -16,12 +16,14 @@ import Alert from '@material-ui/lab/Alert';
 
 import styles from './Homepage.module.scss';
 
-const Component = ({className, children, posts, user, loadPosts, postsRequest}) => {
+const Component = ({className, children, posts, loadPosts, postsRequest}) => {
   useEffect(() => {
     loadPosts();
   }, []);
 
-  const userActions = user
+  const { isAuthenticated, isLoading } = useAuth0();
+
+  const userActions = isAuthenticated && !isLoading
     ? (
       <ActionButton to='/post/add' label='add'>
         <AddIcon />
@@ -53,7 +55,6 @@ Component.propTypes = {
 
 const mapStateToProps = state => ({
   posts: getAllPublished(state),
-  user: getUser(state),
   postsRequest: getRequest(state),
 });
 

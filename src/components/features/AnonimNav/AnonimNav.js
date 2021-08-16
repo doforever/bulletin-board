@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useAuth0 } from '@auth0/auth0-react';
 
 import clsx from 'clsx';
 
@@ -12,16 +13,19 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import styles from './AnonimNav.module.scss';
 
-const Component = ({ className, children }) => (
-  <List component="nav" className={clsx(className, styles.root)}>
-    <ListItem button component='a' href='https://google.com'>
-      <ListItemText primary="Login"/>
-    </ListItem>
-  </List>
-);
+const Component = ({ className }) => {
+  const { loginWithRedirect } = useAuth0();
+
+  return (
+    <List component="nav" className={clsx(className, styles.root)}>
+      <ListItem button component='a' onClick={() => loginWithRedirect()}>
+        <ListItemText primary="Login"/>
+      </ListItem>
+    </List>
+  );
+};
 
 Component.propTypes = {
-  children: PropTypes.node,
   className: PropTypes.string,
 };
 
