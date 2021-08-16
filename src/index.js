@@ -10,7 +10,6 @@ ReactDOM.render(<Auth0Provider
   clientId="2g5NpjpnscxUoBRc0yQolIKaXZF8PmuS"
   redirectUri={window.location.origin}
   audience={audience}
-  scope="create:post update:post delete:post"
   useRefreshTokens={true}
 >
   <App />
