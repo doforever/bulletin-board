@@ -5,9 +5,12 @@ import * as serviceWorker from './serviceWorker';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { audience } from './config';
 
+const domain = process.env.REACT_APP_AUTH0_DOMAIN;
+const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
+
 ReactDOM.render(<Auth0Provider
-  domain="dev-ms59jlua.eu.auth0.com"
-  clientId="2g5NpjpnscxUoBRc0yQolIKaXZF8PmuS"
+  domain={domain}
+  clientId={clientId}
   redirectUri={window.location.origin}
   audience={audience}
   useRefreshTokens={true}
