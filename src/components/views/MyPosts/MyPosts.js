@@ -29,12 +29,12 @@ const Component = ({ className, children, posts, loadPosts, postsRequest }) => {
   else {
     return (
       <Grid container spacing={2} className={clsx(className, styles.root)}>
-        { (postsRequest.active || isLoading) && <Grid item xs={12}><LinearProgress /></Grid>}
-        { postsRequest.error && <Grid item xs={12}>< Alert severity="error" >Loading error</Alert ></Grid>}
+        { (postsRequest.active || isLoading) && postsRequest.type === 'LOAD_POSTS' && <Grid item xs={12}><LinearProgress /></Grid>}
+        { postsRequest.error && postsRequest.type === 'LOAD_POSTS' && <Grid item xs={12}>< Alert severity="error" >Loading error</Alert ></Grid>}
         <ActionButton to='/post/add' label='add'>
           <AddIcon />
         </ActionButton>
-        { !postsRequest.error && !postsRequest.active && <Grid xs={12} item>
+        { ((!postsRequest.error && !postsRequest.active) || postsRequest.type !== 'LOAD_POSTS') && <Grid xs={12} item>
           <PostsList posts={posts ? posts.filter(post => user && post.author === user.email) : []} />
         </Grid> }
         { children}
