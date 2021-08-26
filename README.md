@@ -4,7 +4,7 @@ Backend in Node.js and MongoDB with Mongoose.\
 Authentication and authorization with Auth0 React SDK.
 
 ## Deployed on Heroku
-https://still-stream-70087.herokuapp.com/ \
+https://still-stream-70087.herokuapp.com/ (**takes some time to load** because I use a free account) \
 Uses Heroku ephemeral filesystem for uploads - that means that any changes to the filesystem whilst the dyno is running only last until that dyno is shut down or restarted. \
 On every server restart database is populated with example posts.
 
