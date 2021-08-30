@@ -1,7 +1,8 @@
 # Bulletin Board
-Bulletin board app created with React, Redux and Material UI framework.\
-Backend in Node.js and MongoDB with Mongoose.\
-Authentication and authorization with Auth0 React SDK.
+Bulletin board app created with **React**, **Redux** and **Material UI** framework.\
+Backend in **Node.js** and **MongoDB** with Mongoose.\
+Authentication and authorization with **Auth0** React SDK. \
+Application compiles with **PWA** standard.
 
 ## Deployed on Heroku
 https://still-stream-70087.herokuapp.com/ (**takes some time to load** because I use a free account) \

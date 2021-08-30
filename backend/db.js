@@ -14,7 +14,6 @@ const connectToDB = (dbUri) => {
   db.on('error', (err) => {
     console.log('DB connection error: ' + err);
     connectToDB(dbUri);
-    process.exit();
   });
 };
 
