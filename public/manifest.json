@@ -1,0 +1,27 @@
+{
+  "short_name": "BulletinBoard",
+  "name": "BulletinBoard app",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "any",
+      "purpose": "any"
+    },
+    {
+      "src": "maskable_iconx96.png",
+      "type": "image/png",
+      "sizes": "96x96",
+      "purpose": "maskable"
+    },
+    {
+      "src": "maskable_iconx512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": "/index.html",
+  "display": "standalone",
+  "theme_color": "#2B4C6F",
+  "background_color": "#ffffff"
+}
