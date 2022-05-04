@@ -1,5 +1,6 @@
 # Bulletin Board
 Bulletin board app created with **React**, **Redux** and **Material UI** framework.\
+Application consists of posts list and detailed item view. It allows to add, edit and delete posts to logged in users.\
 Backend in **Node.js** and **MongoDB** with Mongoose.\
 Authentication and authorization with **Auth0** React SDK. \
 Application compiles with **PWA** standard.
